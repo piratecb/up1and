@@ -8,12 +8,13 @@ class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), unique=True, index=True)
+    nickname = db.Column(db.String(64))
+    email = db.Column(db.String(64))
     password_hash = db.Column(db.String)
     token = db.Column(db.String)
-    role = db.Column(db.String(16))
+    role = db.Column(db.Boolean)
 
-    messages = db.relationship('Message', backref='User')
-    calls = db.relationship('Call', backref='User')
+    posts = db.relationship('Post', backref='author', lazy='dynamic')
 
     def __repr__(self):
         return '<User %r>' % self.username
@@ -42,14 +43,58 @@ class User(db.Model):
         return self.id
 
 
-class Post(db.Model):
-    __tablename__ = 'messages'
+class Tag(db.Model):
+    __tablename__ = 'tags'
     id = db.Column(db.Integer, primary_key=True)
-    content = db.Column(db.String)
-    time = db.Column(db.DateTime, default=datetime.datetime.utcnow)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    name = db.Column(db.String(32))
+    slug = db.Column(db.String(32))
 
-    user = db.relationship('User', backref='Post')
+    def __repr__(self):
+        return '<Tag %r>' % (self.name)
+
+class Category(db.Model):
+    __tablename__ = 'categories'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(32))
+    slug = db.Column(db.String(32))
+
+    # todo parent
+
+    def __repr__(self):
+        return '<Category %r>' % (self.name)  
+
+tag_relations = db.Table('tags',
+    db.Column('tag_id', db.Integer, db.ForeignKey('tag.id')),
+    db.Column('post_id', db.Integer, db.ForeignKey('post.id')),
+    extend_existing=True
+)
+
+category_relations =  db.Table('categories',
+    db.Column('category_id', db.Integer, db.ForeignKey('category.id')),
+    db.Column('post_id', db.Integer, db.ForeignKey('post.id')),
+    extend_existing=True
+)
+
+class Post(db.Model):
+    __tablename__ = 'posts'
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(64))
+    slug = db.Column(db.String(64))
+    content = db.Column(db.String)
+    timestamp = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    modify_timestamp = db.Column(db.DateTime, onupdate=datetime.datetime.utcnow)
+    is_draft = db.Column(db.Boolean)
+    author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+    author = db.relationship('User', backref='posts', lazy='dynamic')
+    category = db.relationship('Category',
+                            secondary=category_relations,
+                            backref=db.backref('posts', lazy='dynamic'),
+                            lazy='dynamic')
+    tag = db.relationship('Tag',
+                        secondary=tag_relations,
+                        backref=db.backref('posts', lazy='dynamic'),
+                        lazy='dynamic')
 
     def __repr__(self):
         return '<Post %r>' % (self.content)
@@ -65,6 +110,8 @@ class Post(db.Model):
             record = Message(content=forgery_py.lorem_ipsum.sentences(randint(1, 3)), time=forgery_py.date.date(True), user=u)
         db.session.add(record)
         db.session.commit()
+
+
 
 
 @login_manager.user_loader
