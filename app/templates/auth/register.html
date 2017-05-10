@@ -1,0 +1,29 @@
+{% extends "auth/base.html" %}
+
+{% block title %}注册{% endblock %}
+
+{% block content %}
+<form class="pure-form pure-form-stacked" action="" method="POST">
+    {{ form.hidden_tag() }}
+    <fieldset>
+        <legend>注册 <span class="auth-link"><a href="{{ url_for('main.index') }}">返回</a></span></legend>
+
+        <div class="pure-u-1">
+            {{ form.username.label }}
+            {{ form.username(id='username', class="pure-u-23-24") }}
+        </div>
+
+        <div class="pure-u-1">
+            {{ form.password.label }}
+            {{ form.password(id='password', class="pure-u-23-24") }}
+        </div>
+
+        <div class="pure-u-1">
+            {{ form.password_confirm.label }}
+            {{ form.password_confirm(id='password', class="pure-u-23-24") }}
+        </div>
+
+        {{ form.submit(class='pure-button pure-button-primary') }}
+    </fieldset>
+</form>
+{% endblock %}

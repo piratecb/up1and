@@ -1,0 +1,187 @@
+html, button, input, select, textarea,
+.pure-g [class*="pure-u"] {
+  /* Set your content font stack here: */
+  font-family: "Georgia","Xin Gothic","PingFang SC","Hiragino Sans GB","Droid Sans Fallback","Microsoft YaHei",sans-serif;
+}
+
+body {
+    color: #444;
+}
+
+a:hover {
+    color: #499BC3;
+}
+
+a {
+    color: #467B96;
+    text-decoration: none;
+}
+
+::selection, .wrapper ::selection {
+    background-color: #333;
+    color: #f9f9f9;
+}
+
+.clearfix {
+    zoom: 1;
+}
+
+.clearfix:before, .clearfix:after {
+    content: " ";
+    display: table;
+}
+
+.clearfix:after {
+    clear: both;
+}
+
+.wrapper {
+    padding-left: 16px;
+    padding-right: 16px;
+    margin: 0 auto;
+    zoom: 1;
+ }
+
+.wrapper:after {
+    display: table;
+    content: "";
+    clear: both;
+}
+
+
+.auth {
+    margin-top: 6em;
+}
+
+.auth-link {
+    font-size: 12px;
+}
+
+.auth-link a {
+    color: #999;
+    text-decoration: none;
+}
+
+.auth-link a:hover {
+    color: #555;
+}
+
+/* message */
+.message {
+    font-family: Consolas,Monaco,"Courier New",monospace;
+    font-size: 14px;
+    line-height: 20px;
+    background: #e0e1e1;
+    color: #313439;
+    padding: 1rem;
+    padding-right: 2.5em;
+    padding-bottom: .75rem;
+    margin-bottom: 24px;
+    position: relative;
+}
+
+.message a {
+    color: inherit;
+}
+
+.message h2,.message h3,.message h4,.message h5,.message h6 {
+    margin-bottom: 0;
+}
+
+.message .close {
+    position: absolute;
+    right: 1rem;
+    top: 1.1rem;
+}
+
+.message.error {
+    background: #f03c69;
+    color: #fff;
+}
+
+.message.success {
+    background: #35beb1;
+    color: #fff;
+}
+
+.message.warning {
+    background: #f7ba45;
+}
+
+.message.focus {
+    background: #1c86f2;
+    color: #fff;
+}
+
+.message.black {
+    background: #0d0d0e;
+    color: #fff;
+}
+
+.message.inverted {
+    background: #fff;
+}
+
+
+/* header */
+/*.header {
+    border-bottom: 1px solid #eee;
+}*/
+
+.dashboard {
+    margin: 1em 0 2em;
+}
+
+.menu-dashboard {
+    float: left;
+    margin-top: 6px;
+}
+
+.menu-profile {
+    float: right;
+}
+
+
+.dashboard ul {
+    list-style: none;
+    padding: 0;
+}
+
+.dashboard li {
+    margin-bottom: 5px;
+}
+
+.welcome-board {
+    color: #999;
+}
+
+.welcome-board em{
+    color: #444;
+    font-size: 1.75em;
+}
+
+.welcome-board li {
+    float: left;
+    margin-right: 1.5em;
+}
+
+.latest-link {
+    float: left;
+}
+
+.latest-link span {
+    display: inline-block;
+    margin-right: 12px;
+    color: #999;
+}
+
+
+
+/* footer */
+.footer {
+    padding: 10px 0 20px;
+    border-top: 1px solid #eee;
+    color: #999;
+    font-size: 13px;
+    font-family: "Optima","Helvetica Neue",sans-serif;
+}
