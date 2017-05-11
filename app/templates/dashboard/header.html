@@ -3,24 +3,24 @@
         <div class="menu-dashboard">
             <div class="pure-menu pure-menu-horizontal">
                 <ul class="pure-menu-list">
-                    <li class="pure-menu-item pure-menu-selected"><a href="{{ url_for('main.dashboard') }}" class="pure-menu-link">控制台</a></li>
+                    <li class="pure-menu-item pure-menu-selected"><a href="{{ url_for('dashboard.index') }}" class="pure-menu-link">控制台</a></li>
                     <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
                         <a href="#" class="pure-menu-link">撰写</a>
                         <ul class="pure-menu-children">
-                            <li class="pure-menu-item"><a href="{{ url_for('main.write_post') }}" class="pure-menu-link">撰写文章</a></li>
-                            <li class="pure-menu-item"><a href="{{ url_for('main.write_page') }}" class="pure-menu-link">创建页面</a></li>
+                            <li class="pure-menu-item"><a href="{{ url_for('dashboard.write_post') }}" class="pure-menu-link">撰写文章</a></li>
+                            <li class="pure-menu-item"><a href="{{ url_for('dashboard.write_page') }}" class="pure-menu-link">创建页面</a></li>
                         </ul>
                     </li>
                     <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
                         <a href="#" class="pure-menu-link">管理</a>
                         <ul class="pure-menu-children">
-                            <li class="pure-menu-item"><a href="#" class="pure-menu-link">文章</a></li>
+                            <li class="pure-menu-item"><a href="{{ url_for('dashboard.manage_posts') }}" class="pure-menu-link">文章</a></li>
                             <li class="pure-menu-item"><a href="#" class="pure-menu-link">独立页面</a></li>
                             <li class="pure-menu-item"><a href="#" class="pure-menu-link">评论</a></li>
                             <li class="pure-menu-item"><a href="#" class="pure-menu-link">分类</a></li>
                             <li class="pure-menu-item"><a href="#" class="pure-menu-link">标签</a></li>
                             <li class="pure-menu-item"><a href="#" class="pure-menu-link">文件</a></li>
-                            <li class="pure-menu-item"><a href="{{ url_for('main.user') }}" class="pure-menu-link">用户</a></li>
+                            <li class="pure-menu-item"><a href="{{ url_for('dashboard.user') }}" class="pure-menu-link">用户</a></li>
                         </ul>
                     </li>
                     <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">

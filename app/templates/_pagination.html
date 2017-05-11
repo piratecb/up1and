@@ -1,41 +1,5 @@
-<!-- <div class="paginator" role="navigation">
-  <span>
-    Page 1 of 85
-  </span>
-  
-  
-  <em>1</em>
-  
-  
-  <a href="?page=2">2</a>
-  
-  
-  <a href="?page=3">3</a>
-  
-  
-  <a href="?page=4">4</a>
-  
-  
-  <a href="?page=5">5</a>
-  
-  
-  <a href="?page=6">6</a>
-  
-  
-  <a href="?page=7">7</a>
-  
-  
-  <a href="?page=8">8</a>
-  
-  
-  <a href="?page=2">Next</a>
-  <a href="?page=85">Last</a>
-  
-</div> -->
-
-
 {% macro widget(pagination, endpoint, prefix) %}
-<ul>
+<ul class="clearfix">
     {% if pagination.has_prev %}
         <li class="prev"><a href="{% if prefix %}{{ url_for(endpoint, username=prefix, page=pagination.prev_num, **kwargs) }}{% else %}{{ url_for(endpoint, page=pagination.prev_num, **kwargs) }}{% endif %}">&lt; Prev</a></li>
     {% endif %}

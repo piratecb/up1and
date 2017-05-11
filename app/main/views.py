@@ -53,29 +53,3 @@ def logout():
     logout_user()
     flash('你已退出登陆')
     return redirect(url_for('main.index'))
-
-
-@main.route('/dashboard')
-@login_required
-def dashboard():
-    posts = Post.query.filter_by(type='post').order_by(Post.created.desc())
-    return render_template('dashboard/index.html', posts=posts)
-
-
-@main.route('/dashboard/write-post')
-@login_required
-def write_post():
-    return render_template('dashboard/write_post.html')
-
-
-@main.route('/dashboard/write-page')
-@login_required
-def write_page():
-    return render_template('dashboard/write_page.html')
-
-
-@main.route('/dashboard/user')
-@login_required
-def user():
-    return render_template('dashboard/user.html')
-

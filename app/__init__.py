@@ -1,6 +1,7 @@
 from flask import Flask, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+from flaskext.markdown import Markdown
 from config import config
 
 db = SQLAlchemy()
@@ -17,9 +18,13 @@ def create_app(config_name):
 
     db.init_app(app)
     login_manager.init_app(app)
+    Markdown(app)
 
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)
+
+    from .dashboard import dashboard as dashboard_blueprint
+    app.register_blueprint(dashboard_blueprint, url_prefix='/dashboard')
 
     from .api import api as api_blueprint
     app.register_blueprint(api_blueprint, url_prefix='/api')

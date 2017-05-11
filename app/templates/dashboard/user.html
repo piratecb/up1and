@@ -1,0 +1,39 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}编辑用户{% endblock %}
+
+{% block content %}
+<div class="update-user">
+    <form class="pure-form pure-form-stacked" action="" method="POST">
+        {{ form.hidden_tag() }}
+        <fieldset>
+            <h3>编辑用户</h3>
+            <div class="pure-u-1-2">
+                {{ form.email.label }}
+                {{ form.email(id='email', class="pure-u-23-24") }}
+            </div>
+            <div class="pure-u-1-2">
+                {{ form.nickname.label }}
+                {{ form.nickname(id='nickname', class="pure-u-23-24") }}
+            </div>
+            <label for="role" class="pure-checkbox">
+                {{ form.role }} 管理员权限
+            </label>
+
+            <h3>修改密码</h3>
+            <div class="pure-u-1-2">
+                {{ form.password.label }}
+                {{ form.password(id='password', class="pure-u-23-24") }}
+            </div>
+            <div class="pure-u-1-2">
+                {{ form.password_confirm.label }}
+                {{ form.password_confirm(id='password_confirm', class="pure-u-23-24") }}
+            </div>
+
+            <br>
+            <br>
+            {{ form.submit(class='pure-button pure-button-primary') }}
+        </fieldset>
+    </form>
+</div>
+{% endblock %}

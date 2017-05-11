@@ -1,0 +1,57 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}撰写新文章{% endblock %}
+
+{% block content %}
+
+<div class="write-post">
+        <h3>撰写文章</h3>
+        <form method="post" action="" class="pure-form pure-form-stacked">
+            {{ form.hidden_tag() }}
+            <div class="pure-u-1-1">
+                {{ form.title.label }}
+                {% if form.title.errors %}
+                    {% for error in form.title.errors %}
+                        <p class="help-block">{{ error }}</p>
+                    {% endfor %}
+                {% endif %}
+                {{ form.title(class='pure-u-1') }}
+            </div>
+
+            <div class="pure-u-1">
+                {% if form.content.errors %}
+                    {% for error in form.content.errors %}
+                        <p class="help-block">{{ error }}</p>
+                    {% endfor %}
+                {% endif %}
+                <div id="editormd">
+                    {{ form.content(style="display:none;") }}
+                </div>
+            </div>
+            {{ form.submit(class='pure-button pure-button-primary') }}
+            {{ form.save_draft(class='pure-button') }}
+        </form>
+</div>
+
+{% endblock %}
+
+{% block script %}
+<link rel="stylesheet" href="{{ url_for('static',filename='editormd/css/editormd.css') }}"/>
+<script src="{{ url_for('static',filename='js/jquery.min.js') }}"></script>
+<script src="{{ url_for('static',filename='editormd/editormd.min.js') }}"></script>
+<script type="text/javascript">
+    var editor;
+
+    $(function () {
+        editor = editormd("editormd", {
+            width: "100%",
+            height: 640,
+            emoji : true,
+            // taskList : true,
+            // tocm: true, 
+            syncScrolling: "single",
+            path: "/static/editormd/lib/"
+        });
+    });
+</script>
+{% endblock %}
