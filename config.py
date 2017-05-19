@@ -3,10 +3,9 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 
 class Config:
-    SECRET_KEY = os.environ.get('SECRET_KEY') or 'Waltz in A flat, Op.39 No.15'
+    SECRET_KEY = os.environ.get('UP1AND_SECRET_KEY') or 'Waltz in A flat, Op.39 No.15'
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    GSM_MODEM_PORT = os.environ.get('GSM_MODEM_PORT') or 'COM3'
 
     @staticmethod
     def init_app(app):

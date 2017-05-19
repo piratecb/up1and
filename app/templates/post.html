@@ -3,8 +3,8 @@
 {% block title %}UP1AND{% endblock %}
 
 {% block script %}
-    <link rel="stylesheet" href="http://opu6920tg.bkt.clouddn.com/css/prism.css">
-    <script src="http://opu6920tg.bkt.clouddn.com/js/prism.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/prism.css') }}">
+    <script src="{{ url_for('static', filename='js/prism.js') }}"></script>
 {% endblock %}
 
 {% block content %}
