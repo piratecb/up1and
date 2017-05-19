@@ -1,7 +1,7 @@
 from flask import Flask, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
-from flaskext.markdown import Markdown
+from mistune import markdown
 from config import config
 
 db = SQLAlchemy()
@@ -18,7 +18,6 @@ def create_app(config_name):
 
     db.init_app(app)
     login_manager.init_app(app)
-    Markdown(app)
 
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)
@@ -45,5 +44,9 @@ def create_app(config_name):
     @app.template_filter('strftime')
     def format_datatime(value, format='%b %d, %Y'):
         return value.strftime(format)
+
+    @app.template_filter('markdown')
+    def render_markdown(content):
+        return markdown(content)
 
     return app
