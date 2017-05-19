@@ -1,25 +1,18 @@
 {% extends "base.html" %}
-{% import "_pagination.html" as macros %}
 
 {% block title %}UP1AND{% endblock %}
 
 {% block content %}
-<div class="main pure-g">
-    <div class="wrapper pure-u-1 pure-u-md-4-5 pure-u-lg-3-5">
-        <div class="posts">
-        {% for post in posts %}
-            <div class="post-item">
-                <div class="post-meta"><time class="updated">{{ post.created|strftime }}</time></div>
-                <div class="detail">
-                    <h2 class="post-title"><a href="{{ url_for('main.post', post_id=post.id) }}">{{ post.title }}</a></h2>
-                    <div class="post-description"><p>{{ post.content|markdown|striptags|truncate }}</p></div>
-                </div>
-            </div>
-        {% endfor %}
-        </div>
-        <nav class="pagination align-center">
-        {{ macros.widget(pagination, 'main.index') }}
-        </nav>
+<div class="content list">
+{% for post in posts %}
+  <div class="list-item">
+    <h2 class="list-post-title">
+      <a href="{{ url_for('main.post', post_id=post.id) }}">{{ post.title }}</a>
+    </h2>
+    <div class="list-post-date">
+      <time>{{ post.created|strftime }}</time>
     </div>
+  </div>
+{% endfor %}
 </div>
 {% endblock %}

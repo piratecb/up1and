@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block title %}UP1AND{% endblock %}
+
+{% block content %}
+<div class="content page">
+  <h1 class="page-title">{{ page.title }}</h1>
+  {{ page.content|markdown|safe }}
+</div>
+{% endblock %}
