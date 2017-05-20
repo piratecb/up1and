@@ -1,25 +1,10 @@
-{% macro widget(pagination, endpoint, prefix) %}
-<ul class="clearfix">
+{% macro widget(pagination, endpoint) %}
+<div class="list-pagination">
     {% if pagination.has_prev %}
-        <li class="prev"><a href="{% if prefix %}{{ url_for(endpoint, username=prefix, page=pagination.prev_num, **kwargs) }}{% else %}{{ url_for(endpoint, page=pagination.prev_num, **kwargs) }}{% endif %}">&lt; Prev</a></li>
+        <span class="list-pagination-previous"><a href="{{ url_for(endpoint, page=pagination.prev_num, **kwargs) }}">&lt; previous</a></span>
     {% endif %}
-    {% for p in pagination.iter_pages() %}
-        {% if p %}
-            {% if p == pagination.page %}
-            <li class="active">
-                <a href="{% if prefix %}{{ url_for(endpoint, username=prefix, page = p, **kwargs) }}{% else %}{{ url_for(endpoint, page = p, **kwargs) }}{% endif %}">{{ p }}</a>
-            </li>
-            {% else %}
-            <li>
-                <a href="{% if prefix %}{{ url_for(endpoint, username=prefix, page = p, **kwargs) }}{% else %}{{ url_for(endpoint, page = p, **kwargs) }}{% endif %}">{{ p }}</a>
-            </li>
-            {% endif %}
-        {% else %}
-        <li class="disabled">&hellip;</li>
-        {% endif %}
-    {% endfor %}
     {% if pagination.has_next %}
-        <li class="next"><a href="{% if prefix %}{{ url_for(endpoint, username=prefix, page=pagination.next_num, **kwargs) }}{% else %}{{ url_for(endpoint, page=pagination.next_num, **kwargs) }}{% endif %}">Next &gt;</a></li>
+        <span class="list-pagination-next"><a href="{{ url_for(endpoint, page=pagination.next_num, **kwargs) }}">next &gt;</a></span>
     {% endif %}
-</ul>
+</div>
 {% endmacro %}

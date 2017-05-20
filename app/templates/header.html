@@ -5,6 +5,7 @@
   </h1>
   <nav class="masthead-nav">
     <a href="{{ url_for('main.page', slug='about') }}" class="menu-link">about</a>
+    <a href="{{ url_for('main.archive') }}" class="menu-link">archive</a>
     {% if current_user.is_authenticated %}
     <a href="{{ url_for('dashboard.index') }}" class="menu-link">dashboard</a>
     <a href="{{ url_for('main.logout') }}" class="menu-link">logout</a>

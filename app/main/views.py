@@ -3,13 +3,13 @@ from flask_login import login_required, login_user, logout_user, current_user
 from . import main
 from .forms import LoginForm, RegistrationForm
 from .. import db
-from ..models import User, Post
+from ..models import User, Post, Meta
 
 
 @main.route('/')
 def index():
     arg_page = request.args.get('page', 1, type=int)
-    pagination = Post.query.filter_by(type='post').order_by(Post.created.desc()).paginate(arg_page, per_page=10, error_out=False)
+    pagination = Post.query.filter_by(type='post').order_by(Post.created.desc()).paginate(arg_page, per_page=4, error_out=False)
     posts = pagination.items
     return render_template('index.html', posts=posts, pagination=pagination)
 
@@ -23,6 +23,18 @@ def page(slug):
     page = Post.query.filter_by(type='page', slug=slug).first_or_404()
     return render_template('page.html', page=page)
 
+@main.route('/archive/')
+def archive():
+    arg_page = request.args.get('page', 1, type=int)
+    pagination = Post.query.filter_by(type='post').order_by(Post.created.desc()).paginate(arg_page, per_page=10, error_out=False)
+    posts = pagination.items
+    return render_template('archive.html', posts=posts, pagination=pagination)
+
+@main.route('/tag/<path:slug>')
+def tags(slug):
+    tag = Meta.query.filter_by(type='tag', slug=slug).first_or_404()
+    posts = tag.posts.order_by(Post.created.desc()).all()
+    return render_template('tags.html', posts=posts, tag=tag)
 
 @main.route('/account/login', methods=['GET', 'POST'])
 def login():

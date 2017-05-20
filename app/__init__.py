@@ -1,8 +1,9 @@
 from flask import Flask, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
-from mistune import markdown
 from config import config
+
+import mistune
 
 db = SQLAlchemy()
 
@@ -47,6 +48,8 @@ def create_app(config_name):
 
     @app.template_filter('markdown')
     def render_markdown(content):
+        renderer = mistune.Renderer(hard_wrap=True)
+        markdown = mistune.Markdown(renderer=renderer)
         return markdown(content)
 
     return app

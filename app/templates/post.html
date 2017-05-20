@@ -14,5 +14,10 @@
     <time>{{ post.created|strftime }}</time>
   </div>
   {{ post.content|markdown|safe }}
+  <div class="post-meta">
+    {% for meta in post.metas %}
+        <a href="{{ url_for('main.tags', slug=meta.slug) }}">{{ meta.name }}</a>
+    {% endfor %}
+  </div>
 </div>
 {% endblock %}

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}UP1AND{% endblock %}
+
+{% block content %}
+<div class="content page">
+  <h1 class="page-title">{{ tag.name }}</h1>
+  {% for post in posts %}
+  <div class="archive-list-post">
+      <a href="{{ url_for('main.post', post_id=post.id) }}">
+        <span class="archive-list-post-title">
+          {{ post.title }}
+        </span>
+        <span class="archive-list-post-date">
+          <time>{{ post.created|strftime }}</time>
+        </span>
+      </a>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}
