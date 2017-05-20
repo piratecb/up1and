@@ -1,0 +1,38 @@
+{% extends "account/base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+    <h1>Log In</h1> 
+    <form class="form" action="" method="post">
+        {{ form.hidden_tag() }}
+        <div class="form-field">
+            {{ form.username.label(class='form-field-label') }}
+            {{ form.username(id='username') }}
+            {% if form.username.errors %}
+                <ul class="form-field-errors">
+                {% for error in form.username.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+                </ul> 
+            {% endif %}
+        </div>
+        <div class="form-field"> 
+            {{ form.password.label(class='form-field-label') }}
+            {{ form.password(id='password') }}
+            {% if form.password.errors %}
+                <ul class="form-field-errors">
+                {% for error in form.password.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+                </ul> 
+            {% endif %}
+        </div> 
+        <div class="form-field">
+            {{ form.submit(class='button') }}
+        </div> 
+    </form> 
+    <div class="account-link"> 
+        <a href="{{ url_for('main.index') }}">Back</a> 
+    </div>
+{% endblock %}

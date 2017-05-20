@@ -21,10 +21,10 @@ def post(post_id):
 @main.route('/<path:slug>')
 def page(slug):
     page = Post.query.filter_by(type='page', slug=slug).first_or_404()
-    return render_template('post.html', post=page)
+    return render_template('page.html', page=page)
 
 
-@main.route('/login', methods=['GET', 'POST'])
+@main.route('/account/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
     if form.validate_on_submit():
@@ -33,21 +33,21 @@ def login():
             login_user(user, form.remember_me.data)
             return redirect(request.args.get('next') or url_for('main.index'))
         flash('用户名或密码错误')
-    return render_template('auth/login.html', form=form)
+    return render_template('account/login.html', form=form, title='Login')
 
 
-@main.route('/register', methods=['GET', 'POST'])
-def register():
+@main.route('/account/signup', methods=['GET', 'POST'])
+def signup():
     form = RegistrationForm()
     if form.validate_on_submit():
         user = User(username=form.username.data, password=form.password.data)
         db.session.add(user)
         flash('注册成功')
         return redirect(url_for('main.index'))
-    return render_template('auth/register.html', form=form)
+    return render_template('account/signup.html', form=form, title='Sign Up')
 
 
-@main.route('/logout')
+@main.route('/account/logout')
 @login_required
 def logout():
     logout_user()

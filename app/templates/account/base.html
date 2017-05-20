@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}{% endblock %}</title>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+
+</head>
+<body>
+<div class="layout-content">
+    {% block content %}{% endblock %}
+    {% for message in get_flashed_messages() %}
+        <div class="message warning"> {{ message }}</div>
+    {% endfor %}
+</div>
+</body>
+</html>
