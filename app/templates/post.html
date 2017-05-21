@@ -10,13 +10,18 @@
 {% block content %}
 <div class="content post">
   <h1 class="post-title">{{ post.title }}</h1>
-  <div class="post-date">
+  <div class="post-meta">
     <time>{{ post.created|strftime }}</time>
+    <span class="author">
+    <a href="{{ url_for('main.index') }}">
+        {{ post.author.nickname }}
+    </a>
+    </span>
   </div>
   {{ post.content|markdown|safe }}
-  <div class="post-meta">
-    {% for meta in post.metas %}
-        <a href="{{ url_for('main.tags', slug=meta.slug) }}">{{ meta.name }}</a>
+  <div class="post-tags">
+    {% for tag in post.metas %}
+        <a href="{{ url_for('main.tags', slug=tag.slug) }}">{{ tag.name }}</a>
     {% endfor %}
   </div>
 </div>

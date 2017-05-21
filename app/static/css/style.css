@@ -240,31 +240,44 @@ tbody tr:nth-child(odd) th {
 
 .post-title {
   margin-bottom: .25rem; }
-.post-date {
+.post-meta {
   margin-bottom: 2rem;
   font-size: .75rem;
-  text-transform: uppercase; }
+  color: rgba(0,0,0,.42);
+}
 
 .post-meta a {
+  text-decoration: none;
+  color: rgba(0,0,0,.42);
+  font-weight: 600;
+}
+
+.post-meta span:before {
+    content: "/ ";
+    font-size: 10px;
+    margin: 0 4px;
+}
+
+.post-tags a {
     display: inline-block;
     text-decoration: none;
     font-size: 13px;
     color: rgba(0,0,0,.42);
 }
 
-.post-meta a+a {
+.post-tags a+a {
     margin-left: 1em;
 }
 
-.post-meta a:before {
+.post-tags a:before {
   content: "#";
   font-weight: 900;
   color: rgba(0,0,0,.1);
   margin-right: 1px
 }
 
-.post-meta a:hover:before {
-  color: rgba(0,0,0,.42)
+.post-tags a:hover:before {
+  color: rgba(0,0,0,.6)
 }
 
 .list-post-title {

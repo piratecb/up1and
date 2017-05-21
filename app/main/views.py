@@ -9,7 +9,7 @@ from ..models import User, Post, Meta
 @main.route('/')
 def index():
     arg_page = request.args.get('page', 1, type=int)
-    pagination = Post.query.filter_by(type='post').order_by(Post.created.desc()).paginate(arg_page, per_page=4, error_out=False)
+    pagination = Post.query.filter_by(type='post').order_by(Post.created.desc()).paginate(arg_page, per_page=10, error_out=False)
     posts = pagination.items
     return render_template('index.html', posts=posts, pagination=pagination)
 
