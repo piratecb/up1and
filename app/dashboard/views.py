@@ -23,7 +23,7 @@ def write_post():
         db.session.flush()
         flash('文章已发布 %s' % post.title)
         return redirect(url_for('dashboard.manage_posts'))
-    return render_template('dashboard/edit_post.html', form=form)
+    return render_template('dashboard/edit_post.html', form=form, editor_id='editor-post')
 
 @dashboard.route('/edit-post/<int:post_id>', methods=['GET', 'POST'])
 @login_required
@@ -43,7 +43,7 @@ def edit_post(post_id):
         return redirect(url_for('dashboard.manage_posts'))
     form.title.data = post.title
     form.content.data = post.content
-    return render_template('dashboard/edit_post.html', form=form)
+    return render_template('dashboard/edit_post.html', form=form, editor_id='editor-post' + str(post_id))
 
 @dashboard.route('/delete-post/<int:post_id>')
 @login_required
