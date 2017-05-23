@@ -52,35 +52,62 @@ h4, h5, h6 {
 p {
   margin: 0 0 1rem; }
 
-ul, ol, dl {
-  margin-top: 0;
-  margin-bottom: 1rem; }
-
 dt {
   font-weight: bold; }
 
 dd {
   margin-bottom: .5rem; }
 
-ul {
-  list-style: inside circle;
-  padding-left: 0; }
-  ul li {
-    margin-bottom: .25rem; }
-  ul ul,
-  ul ol {
-    margin-top: .25rem;
-    margin-bottom: .5rem; }
+ol,ul,dl {
+    margin: 0 0 1em;
+    padding: 0;
+    list-style: none;
+    list-style-image: none
+}
+
+ol>li:before,ul>li:before {
+    position: absolute;
+    width: 1.7em;
+    margin-left: -1.7em;
+    display: inline-block;
+    box-sizing: border-box;
+    text-align: right
+}
+
+ul>li:before {
+    content: "\2022";
+    padding-right: .65em;
+    font-family: inherit;
+    font-size: 1.2em;
+    line-height: 1.2
+}
 
 ol {
-  list-style: inside decimal;
-  padding-left: 0; }
-  ol li {
-    margin-bottom: .25rem; }
-  ol ul,
-  ol ol {
-    margin-top: .25rem;
-    margin-bottom: .5rem; }
+    counter-reset: section
+}
+
+ol>li:before {
+    counter-increment: section;
+    content: counter(section) ".";
+    padding-right: .65em;
+    font-family: inherit;
+    font-size: 1em;
+    line-height: inherit
+}
+
+ol>li,ul>li {
+    margin: 0 auto .8em 1.7em;
+    line-height: 1.55
+}
+
+ol>li>ol,ol>li>ul,ul>li>ol,ul>li>ul {
+    margin-top: .8em
+}
+
+li>ol>li,li>ul>li {
+    font-size: .95em;
+    margin: 0 auto .76em 1.615em
+}
 
 p + h1,
 p + h2,
@@ -123,7 +150,7 @@ blockquote {
 
 code,
 pre {
-  font-family: Menlo, Monaco, "Courier New", monospace; }
+  font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace; }
 
 code {
   padding: .25em .5em;
@@ -139,7 +166,6 @@ pre {
   padding: 1rem;
   font-size: .8rem;
   line-height: 1.4;
-  white-space: pre;
   white-space: pre-wrap;
   word-break: break-all;
   background-color: #f9f9f9; }
@@ -149,26 +175,6 @@ pre code {
   font-size: 100%;
   color: inherit;
   background-color: transparent; }
-
-.gist .gist-file {
-  font-family: Menlo, Monaco, "Courier New", monospace !important; }
-
-.gist .markdown-body {
-  padding: 15px; }
-
-.gist pre {
-  padding: 0;
-  background-color: transparent; }
-
-.gist .gist-file .gist-data {
-  font-size: .8rem !important;
-  line-height: 1.4; }
-
-.gist code {
-  padding: 0;
-  color: inherit;
-  background-color: transparent;
-  border-radius: 0; }
 
 img {
   display: block;
@@ -191,8 +197,10 @@ tbody tr:nth-child(odd) td,
 tbody tr:nth-child(odd) th {
   background-color: #f9f9f9; }
 
-.lead {
-  font-size: 1.25rem; }
+::selection, .wrapper ::selection {
+    background-color: #333;
+    color: #f9f9f9;
+}
 
 .container {
   max-width: 38rem;
@@ -246,10 +254,14 @@ tbody tr:nth-child(odd) th {
   color: rgba(0,0,0,.42);
 }
 
+.post-meta time {
+  text-transform: uppercase;
+}
+
 .post-meta a {
   text-decoration: none;
   color: rgba(0,0,0,.42);
-  font-weight: 600;
+  font-weight: 400;
 }
 
 .post-meta span:before {
@@ -350,9 +362,4 @@ tbody tr:nth-child(odd) th {
   color: #868e96;
   font-size: .75rem;
   text-transform: uppercase
-}
-
-::selection, .wrapper ::selection {
-    background-color: #333;
-    color: #f9f9f9;
 }
