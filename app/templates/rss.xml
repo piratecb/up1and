@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+<channel>
+  <title>Up1and</title>
+  <link>{{ url_for('main.index', _external=True) }}</link>
+  <description>哪有什么诗和远方啊 牛肉罐头就是最伟大的航路呀 除了啃骨头没有什么算劳动啊 只有人类才操心明天</description>
+  {% for post in posts %}
+  <item>
+    <title>{{ post.title }}</title>
+    <link>{{ url_for('main.post', post_id=post.id, _external=True) }}</link>
+    <pubDate>{{ post.created }}</pubDate>
+    <description>
+      {{ post.content|markdown|safe }}
+    </description>
+  </item>
+  {% endfor %}
+</channel>
+
+</rss>

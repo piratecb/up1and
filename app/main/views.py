@@ -30,6 +30,11 @@ def archive():
     posts = pagination.items
     return render_template('archive.html', posts=posts, pagination=pagination)
 
+@main.route('/rss.xml')
+def rss():
+    posts = Post.query.filter_by(type='post').all()[:10]
+    return render_template('rss.xml', posts=posts)
+
 @main.route('/tag/<path:slug>')
 def tags(slug):
     tag = Meta.query.filter_by(type='tag', slug=slug).first_or_404()
