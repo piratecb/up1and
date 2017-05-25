@@ -91,7 +91,7 @@ class Post(db.Model):
     title = db.Column(db.String(64))
     slug = db.Column(db.String(64))
     description = db.Column(db.String(128))
-    content = db.Column(db.String)
+    content = db.Column(db.Text)
     created = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     updated = db.Column(db.DateTime, onupdate=datetime.datetime.utcnow)
     type = db.Column(db.String(10), default='post')
