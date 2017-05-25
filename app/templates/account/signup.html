@@ -17,6 +17,17 @@
                 </ul> 
             {% endif %}
         </div>
+        <div class="form-field">
+            {{ form.email.label(class='form-field-label') }}
+            {{ form.email(id='email') }}
+            {% if form.email.errors %}
+                <ul class="form-field-errors">
+                {% for error in form.email.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+                </ul> 
+            {% endif %}
+        </div>
         <div class="form-field"> 
             {{ form.password.label(class='form-field-label') }}
             {{ form.password(id='password') }}

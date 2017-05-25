@@ -57,7 +57,7 @@ def login():
 def signup():
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = User(username=form.username.data, password=form.password.data)
+        user = User(username=form.username.data, email=form.email.data, password=form.password.data)
         db.session.add(user)
         flash('注册成功')
         return redirect(url_for('main.index'))
