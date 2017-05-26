@@ -1,9 +1,9 @@
+import hashlib
+import mistune
 from flask import Flask, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from config import config
-
-import mistune
 
 db = SQLAlchemy()
 
@@ -51,5 +51,12 @@ def create_app(config_name):
         renderer = mistune.Renderer(hard_wrap=True)
         markdown = mistune.Markdown(renderer=renderer)
         return markdown(content)
+
+    @app.template_filter('gravatar')
+    def gravatar_url(email, size=100, default='identicon', rating='g'):
+        url = 'https://www.gravatar.com/avatar'
+        hash = '' if email is None else hashlib.md5(email.encode('utf-8').lower()).hexdigest()
+        return '{url}/{hash}?s={size}&d={default}&r={rating}'.format(
+            url=url, hash=hash, size=size, default=default, rating=rating)
 
     return app
