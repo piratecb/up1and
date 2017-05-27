@@ -16,7 +16,7 @@ class User(db.Model, UserMixin):
     PERMISSIONS = {
         'user': Permission.COMMENT,
         'author': Permission.COMMENT | Permission.POST,
-        'editor': Permission.COMMENT | Permission.POST | Permission.PAGE,
+        'editor': Permission.COMMENT | Permission.POST | Permission.PAGE | Permission.OPERATE,
         'administrator': Permission.ADMINISTER
     }
 
@@ -53,10 +53,11 @@ class User(db.Model, UserMixin):
             return 0x00
 
     def can(self, permission):
+        permission = getattr(Permission, permission)
         return self.group is not None and (self.permissions & permission) == permission
 
     def is_admin(self):
-        return self.can(Permission.ADMINISTER)
+        return self.can('ADMINISTER')
 
 
 class Meta(db.Model):

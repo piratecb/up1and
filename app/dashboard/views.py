@@ -3,14 +3,14 @@ from flask_login import login_required, current_user
 from . import dashboard
 from .forms import UserEditForm, PostForm, ProfileEditForm, ChangePasswordForm
 from .. import db
-from ..models import Post, Permission
+from ..models import Post
 from ..utils import permission_required, admin_required
 
 
 @dashboard.route('/')
 @login_required
 def index():
-    if current_user.group == 'user':
+    if not current_user.can('POST'):
         return redirect(url_for('dashboard.profile'))
 
     posts = Post.query.filter_by(type='post').order_by(Post.created.desc())
@@ -19,6 +19,7 @@ def index():
 
 @dashboard.route('/write-post', methods=['GET', 'POST'])
 @login_required
+@permission_required('POST')
 def write_post():
     form = PostForm()
     if form.validate_on_submit():
@@ -31,10 +32,11 @@ def write_post():
 
 @dashboard.route('/edit-post/<int:post_id>', methods=['GET', 'POST'])
 @login_required
+@permission_required('POST')
 def edit_post(post_id):
     post = Post.query.get_or_404(post_id)
 
-    if current_user.id != post.author_id:
+    if not current_user.can('OPERATE') and current_user.id != post.author_id:
         abort(403)
 
     form = PostForm()
@@ -51,10 +53,11 @@ def edit_post(post_id):
 
 @dashboard.route('/delete-post/<int:post_id>')
 @login_required
+@permission_required('POST')
 def delete_post(post_id):
     post = Post.query.get_or_404(post_id)
 
-    if current_user.id != post.author_id:
+    if not current_user.can('OPERATE') and current_user.id != post.author_id:
         abort(403)
 
     db.session.delete(post)
@@ -63,15 +66,22 @@ def delete_post(post_id):
 
 @dashboard.route('/manage-posts')
 @login_required
+@permission_required('POST')
 def manage_posts():
+    if current_user.can('OPERATE'):
+        query = Post.query.filter_by(type='post')
+    else:
+        query = Post.query.filter_by(type='post', author_id=current_user.id)
+
     arg_page = request.args.get('page', 1, type=int)
-    pagination = Post.query.filter_by(type='post').order_by(Post.created.desc()).paginate(arg_page, per_page=10, error_out=False)
+    pagination = query.order_by(Post.created.desc()).paginate(arg_page, per_page=10, error_out=False)
     posts = pagination.items
     return render_template('dashboard/manage_posts.html', posts=posts, pagination=pagination)
 
 
 @dashboard.route('/write-page')
 @login_required
+@permission_required('PAGE')
 def write_page():
     return render_template('dashboard/edit_page.html')
 
