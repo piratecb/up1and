@@ -95,8 +95,43 @@ html, button, input, select, textarea,
 
 /* header */
 .header {
-    -webkit-box-shadow: 0 0 5px rgba(0,0,0,.1);
-    box-shadow: 0 0 5px rgba(0,0,0,.1);
+    -webkit-box-shadow: 0 1px 5px rgba(0,0,0,.1);
+    box-shadow: 0 1px 5px rgba(0,0,0,.1);
+}
+
+.header .pure-menu-has-children>.pure-menu-link:after {
+    padding: 0;
+    content: ''
+}
+
+.header .pure-menu-children {
+    -webkit-box-shadow: 0 1px 5px rgba(0,0,0,.1);
+    box-shadow: 0 1px 5px rgba(0,0,0,.1);
+}
+
+.header .menu-profile .gravatar {
+    border-radius: 15px;
+}
+
+.inverted {
+    background-color: #292d33;
+}
+
+.inverted a {
+    color: #bbb;
+}
+
+.inverted .pure-menu-active>.pure-menu-link, .inverted .pure-menu-link:hover, .inverted .pure-menu-link:focus {
+    background-color: #202328;
+    color: #fff;
+}
+
+.inverted .pure-menu-children {
+    background-color: #292d33;
+}
+
+.inverted .pure-menu-selected .pure-menu-link {
+    color: #fff;
 }
 
 .dashboard {
@@ -105,7 +140,6 @@ html, button, input, select, textarea,
 
 .menu-dashboard {
     float: left;
-    margin-top: 6px;
 }
 
 .menu-profile {
@@ -147,7 +181,4 @@ html, button, input, select, textarea,
 }
 
 
-.pure-menu-active>.pure-menu-link, .pure-menu-link:focus, .pure-menu-link:hover {
-    background-color: transparent;
-    color: rgba(0,0,0,.86);
-}
+
