@@ -223,18 +223,24 @@ canvas {
     margin-right: 4px
 }
 
-.form-field input[type=email],.form-field input[type=password],.form-field input[type=text],.form-field input[type=url] {
+.form-field input[type=email],.form-field input[type=password],.form-field input[type=text],
+.form-field input[type=url],.form-field select {
     font-size: 14px;
     font-family: inherit;
     border: 0;
     outline: 0;
     border-radius: 0;
     border-bottom: 1px solid rgba(0,0,0,.1);
-    min-width: 200px
+    min-width: 200px;
+    padding-top: 0.25rem;
 }
 
 .form-field select {
-    margin-top: 6px
+    background: #fff;
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
 }
 
 .form-field textarea {
@@ -394,4 +400,5 @@ a {
 .message {
     font-size: 14px;
     color: rgba(0,0,0,.42);
+    margin-top: 1em;
 }

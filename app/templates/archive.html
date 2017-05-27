@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% import "_pagination.html" as macros %}
+{% from "_macro.html" import render_pagination %}
 
 {% block title %}UP1AND{% endblock %}
 
@@ -18,6 +18,6 @@
       </a>
   </div>
   {% endfor %}
-<!-- {{ macros.widget(pagination, 'main.index') }} -->
+<!-- {{ render_pagination(pagination, 'main.index') }} -->
 </div>
 {% endblock %}

@@ -1,35 +1,24 @@
 {% extends "dashboard/base.html" %}
+{% from "_macro.html" import render_field %}
 
 {% block title %}撰写新文章{% endblock %}
 
 {% block content %}
 
 <div class="write-post">
-        <h3>撰写文章</h3>
-        <form method="post" action="" class="pure-form pure-form-stacked">
+        <h2>撰写文章</h2>
+        <form class="form" action="" method="post">
             {{ form.hidden_tag() }}
-            <div class="pure-u-1-1">
-                {{ form.title.label }}
-                {% if form.title.errors %}
-                    {% for error in form.title.errors %}
-                        <p class="help-block">{{ error }}</p>
-                    {% endfor %}
-                {% endif %}
-                {{ form.title(class='pure-u-1') }}
-            </div>
-
-            <div class="pure-u-1">
-                {% if form.content.errors %}
-                    {% for error in form.content.errors %}
-                        <p class="help-block">{{ error }}</p>
-                    {% endfor %}
-                {% endif %}
+            {{ render_field(form.title, 'title') }}
+            <div class="form-field">
                 <div id="editor-wrapper">
                     {{ form.content(id=editor_id) }}
                 </div>
             </div>
-            {{ form.submit(class='pure-button pure-button-primary') }}
-            {{ form.save_draft(class='pure-button') }}
+            <div class="form-field">
+                {{ form.submit(class='button') }}
+                {{ form.save_draft(class='button') }}
+            </div>
         </form>
 </div>
 
