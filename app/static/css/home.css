@@ -9,10 +9,6 @@ body {
     margin: 0
 }
 
-article,aside,footer,header,nav,section {
-    display: block
-}
-
 h1 {
     font-size: 2em;
     margin: .67em 0
@@ -58,11 +54,6 @@ b,strong {
     font-weight: bolder
 }
 
-code,kbd,samp {
-    font-family: monospace,monospace;
-    font-size: 1em
-}
-
 dfn {
     font-style: italic
 }
@@ -100,15 +91,8 @@ audio:not([controls]) {
     height: 0
 }
 
-img {
-    border-style: none
-}
 
-svg:not(:root) {
-    overflow: hidden
-}
-
-button,input,optgroup,select,textarea {
+button,input,select,textarea {
     font-family: sans-serif;
     font-size: 100%;
     line-height: 1.75;
@@ -146,11 +130,6 @@ legend {
     white-space: normal
 }
 
-progress {
-    display: inline-block;
-    vertical-align: baseline
-}
-
 textarea {
     overflow: auto
 }[type=checkbox],[type=radio] {
@@ -169,20 +148,6 @@ textarea {
 ::-webkit-file-upload-button {
     -webkit-appearance: button;
     font: inherit
-}
-
-details,menu {
-    display: block
-}
-
-summary {
-    display: list-item
-}
-
-canvas {
-    display: inline-block
-}[hidden],template {
-    display: none
 }
 
 .button {
@@ -205,6 +170,12 @@ canvas {
 .button:hover {
     background-color: rgba(0,0,0,.98);
     color: #fff
+}
+
+.button-primary:hover {
+    background-color: transparent;
+    color: rgba(0,0,0,.64);
+    border-color: rgba(0,0,0,.2);
 }
 
 .form-field {
@@ -303,27 +274,6 @@ canvas {
     outline: 0
 }
 
-.flickr-button:after,.flickr-button:before {
-    display: inline-block;
-    content: "";
-    width: 10px;
-    height: 10px;
-    margin: 0 1px;
-    border-radius: 6px
-}
-
-.flickr-button:before {
-    background-color: #006add
-}
-
-.flickr-button:after {
-    background-color: #ff1981
-}
-
-.flickr-button:hover {
-    -webkit-box-shadow: 0 1px 10px rgba(0,0,0,.1);
-    box-shadow: 0 1px 10px rgba(0,0,0,.1)
-}
 
 .delete-link {
     display: inline-block;
@@ -354,48 +304,9 @@ a {
     margin: 0 auto
 }
 
-.form-field #slug {
-    width: 6em;
-    min-width: 0
-}
-
-.form-field #url_type {
-    font-size: 14px;
-    color: rgba(0,0,0,.42)
-}
-
-.home-head h1 {
-    font-size: 42px
-}
-
-.home-head h2 {
-    font-size: 24px;
-    font-weight: 300;
-    color: rgba(0,0,0,.42)
-}
-
-.home-links {
-    margin-top: 100px
-}
-
-.home-links a+a {
-    margin-left: 1em
-}
-
-.layout-content section>h2 {
-    font-size: 16px;
-    font-weight: 300;
-    color: rgba(0,0,0,.42)
-}
-
-.layout-content section+section {
-    margin-top: 60px
-}
-
 .account-link a {
     font-size: 12px
 }
-
 
 .message {
     font-size: 14px;

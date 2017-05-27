@@ -1,21 +1,8 @@
 html, button, input, select, textarea,
 .pure-g [class*="pure-u"] {
   /* Set your content font stack here: */
-  font-family: "Georgia","Xin Gothic","PingFang SC","Hiragino Sans GB","Droid Sans Fallback","Microsoft YaHei",sans-serif;
+  font-family: "Georgia","Droid Sans Fallback","Microsoft YaHei",sans-serif;
 }
-
-/*body {
-    color: #444;
-}*/
-
-/*a:hover {
-    color: #499BC3;
-}
-
-a {
-    color: #467B96;
-    text-decoration: none;
-}*/
 
 ::selection, .wrapper ::selection {
     background-color: #333;
@@ -107,6 +94,10 @@ a {
 
 
 /* header */
+.header {
+    -webkit-box-shadow: 0 0 5px rgba(0,0,0,.1);
+    box-shadow: 0 0 5px rgba(0,0,0,.1);
+}
 
 .dashboard {
     margin: 1em 0 2em;
@@ -153,4 +144,10 @@ a {
     display: inline-block;
     margin-right: 12px;
     color: #999;
+}
+
+
+.pure-menu-active>.pure-menu-link, .pure-menu-link:focus, .pure-menu-link:hover {
+    background-color: transparent;
+    color: rgba(0,0,0,.86);
 }
