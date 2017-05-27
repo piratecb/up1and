@@ -14,84 +14,6 @@ h1 {
     margin: .67em 0
 }
 
-figcaption,figure,main {
-    display: block
-}
-
-figure {
-    margin: 1em 40px
-}
-
-hr {
-    -webkit-box-sizing: content-box;
-    box-sizing: content-box;
-    height: 0;
-    overflow: visible
-}
-
-pre {
-    font-family: monospace,monospace;
-    font-size: 1em
-}
-
-a {
-    background-color: transparent;
-    -webkit-text-decoration-skip: objects
-}
-
-a:active,a:hover {
-    outline-width: 0
-}
-
-abbr[title] {
-    border-bottom: none;
-    text-decoration: underline;
-    text-decoration: underline dotted
-}
-
-b,strong {
-    font-weight: inherit;
-    font-weight: bolder
-}
-
-dfn {
-    font-style: italic
-}
-
-mark {
-    background-color: #ff0;
-    color: #000
-}
-
-small {
-    font-size: 80%
-}
-
-sub,sup {
-    font-size: 75%;
-    line-height: 0;
-    position: relative;
-    vertical-align: baseline
-}
-
-sub {
-    bottom: -.25em
-}
-
-sup {
-    top: -.5em
-}
-
-audio,video {
-    display: inline-block
-}
-
-audio:not([controls]) {
-    display: none;
-    height: 0
-}
-
-
 button,input,select,textarea {
     font-family: sans-serif;
     font-size: 100%;
@@ -202,7 +124,7 @@ textarea {
     outline: 0;
     border-radius: 0;
     border-bottom: 1px solid rgba(0,0,0,.1);
-    min-width: 200px;
+    width: 100%;
     padding-top: 0.25rem;
 }
 
@@ -250,66 +172,4 @@ textarea {
     padding: 0;
     font-size: 12px;
     color: rgba(200,10,10,.6)
-}
-
-.flickr-button {
-    display: inline-block;
-    color: #767676;
-    background-color: #fff;
-    -webkit-box-shadow: 0 1px 5px rgba(0,0,0,.1);
-    box-shadow: 0 1px 5px rgba(0,0,0,.1);
-    border: 0;
-    border-radius: 48px;
-    height: 48px;
-    width: 48px;
-    padding: 0;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-    text-align: center;
-    cursor: pointer;
-    -webkit-transition: -webkit-box-shadow .2s ease;
-    transition: -webkit-box-shadow .2s ease;
-    transition: box-shadow .2s ease;
-    transition: box-shadow .2s ease,-webkit-box-shadow .2s ease;
-    outline: 0
-}
-
-
-.delete-link {
-    display: inline-block;
-    margin-top: 20px;
-    opacity: .8;
-    color: rgba(0,0,0,.42);
-    font-size: 12px;
-    text-decoration: underline;
-    cursor: pointer
-}
-
-body {
-    font-family: -apple-system,BlinkMacSystemFont,Helvetica Neue,PingFang SC,Hiragino Sans GB,Droid Sans Fallback,Microsoft YaHei,sans-serif
-}
-
-img {
-    max-width: 100%;
-    vertical-align: middle
-}
-
-a {
-    color: rgba(0,0,0,.86)
-}
-
-.layout-content {
-    max-width: 860px;
-    padding: 80px 40px;
-    margin: 0 auto
-}
-
-.account-link a {
-    font-size: 12px
-}
-
-.message {
-    font-size: 14px;
-    color: rgba(0,0,0,.42);
-    margin-top: 1em;
 }

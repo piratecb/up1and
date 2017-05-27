@@ -1,7 +1,18 @@
 html, button, input, select, textarea,
 .pure-g [class*="pure-u"] {
   /* Set your content font stack here: */
-  font-family: "Georgia","Droid Sans Fallback","Microsoft YaHei",sans-serif;
+    font-family: sans-serif;
+    font-weight: 200;
+    letter-spacing: 0.01em;
+}
+
+a {
+    /*color: #217ac0;*/
+    color: rgba(0,0,0,.98);
+    text-decoration: none;
+}
+a:hover, a:focus {
+    color: rgba(0,0,0,.6);
 }
 
 ::selection, .wrapper ::selection {
@@ -23,8 +34,6 @@ html, button, input, select, textarea,
 }
 
 .wrapper {
-    padding-left: 16px;
-    padding-right: 16px;
     margin: 0 auto;
     zoom: 1;
  }
@@ -111,6 +120,7 @@ html, button, input, select, textarea,
 
 .header .menu-profile .gravatar {
     border-radius: 15px;
+    margin-top: 3px;
 }
 
 .inverted {
@@ -146,6 +156,9 @@ html, button, input, select, textarea,
     float: right;
 }
 
+.dashboard section {
+    padding-bottom: 20px;
+}
 
 .dashboard ul {
     list-style: none;
@@ -179,6 +192,4 @@ html, button, input, select, textarea,
     margin-right: 12px;
     color: #999;
 }
-
-
 

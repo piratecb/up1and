@@ -1,0 +1,27 @@
+body {
+    font-family: -apple-system,BlinkMacSystemFont,Helvetica Neue,PingFang SC,Hiragino Sans GB,Droid Sans Fallback,Microsoft YaHei,sans-serif
+}
+
+a {
+    color: rgba(0,0,0,.86)
+}
+
+.account-wrapper {
+    max-width: 860px;
+    padding: 80px 40px;
+    margin: 0 auto
+}
+
+.account-content {
+    width: 220px;
+}
+
+.account-link a {
+    font-size: 12px
+}
+
+.message {
+    font-size: 14px;
+    color: rgba(0,0,0,.42);
+    margin-top: 1em;
+}

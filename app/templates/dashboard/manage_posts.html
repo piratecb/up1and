@@ -13,7 +13,7 @@
                     <th> </th>
                     <th>标题</th>
                     <th>作者</th>
-                    <th>分类</th>
+                    <th>标签</th>
                     <th>日期</th>
                     <th> </th>
                 </tr>
@@ -24,7 +24,11 @@
                     <td> </td>
                     <td><a href="{{ url_for('dashboard.edit_post', post_id=post.id) }}">{{ post.title }}</a></td>
                     <td><a href="">{{ post.author.username }}</a></td>
-                    <td><a href="">{{ post.metas[0] }}</a></td>
+                    <td>
+                    {% for meta in post.metas %}
+                        <a href="">{{ meta.name }}</a>
+                    {% endfor %}
+                    </td>
                     <td>{{ post.created|strftime('%m-%d') }}</td>
                     <td><a href="{{ url_for('dashboard.delete_post', post_id=post.id) }}" class="post-delete"> 删除 </a></td>
                 </tr>

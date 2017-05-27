@@ -4,25 +4,36 @@
 {% block title %}个人资料{% endblock %}
 
 {% block content %}
-<div class="update-user">
-    <a href="https://gravatar.com/emails/" title="在 Gravatar 上修改头像" target="_blank"><img src="{{ current_user.email|gravatar(220) }}"></a>
-    <h2>个人资料</h2> 
-    <form class="form" action="" method="post">
-        {{ profile_form.hidden_tag() }}
-        {{ render_field(profile_form.email, 'email') }}
-        {{ render_field(profile_form.nickname, 'nickname') }}
-        <div class="form-field">
-            {{ profile_form.submit(class='button') }}
-        </div>
-    </form>
-    <h2>修改密码</h2>
-    <form class="form" action="" method="post">
-        {{ password_form.hidden_tag() }}
-        {{ render_field(password_form.password, 'password') }}
-        {{ render_field(password_form.password_confirm, 'password_confirm') }}
-        <div class="form-field">
-            {{ password_form.submit(class='button') }}
-        </div>
-    </form>
+<div class="update-user pure-g">
+    <div class="pure-u-2-5">
+        <br>
+        <a href="https://gravatar.com/emails/" title="在 Gravatar 上修改头像" target="_blank" class="pure-img-responsive">
+            <img src="{{ current_user.email|gravatar(220) }}">
+        </a>
+    </div>
+    <div class="pure-u-2-5">
+        <section>
+            <h3>个人资料</h3> 
+            <form class="form" action="" method="post">
+                {{ profile_form.hidden_tag() }}
+                {{ render_field(profile_form.email, 'email') }}
+                {{ render_field(profile_form.nickname, 'nickname') }}
+                <div class="form-field">
+                    {{ profile_form.submit(class='button') }}
+                </div>
+            </form>
+        </section>
+        <section>
+            <h3>修改密码</h3>
+            <form class="form" action="" method="post">
+                {{ password_form.hidden_tag() }}
+                {{ render_field(password_form.password, 'password') }}
+                {{ render_field(password_form.password_confirm, 'password_confirm') }}
+                <div class="form-field">
+                    {{ password_form.submit(class='button') }}
+                </div>
+            </form>
+        </section>
+    </div>
 </div>
 {% endblock %}
