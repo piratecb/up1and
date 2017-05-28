@@ -6,7 +6,7 @@
                     <li class="pure-menu-item pure-menu-selected"><a href="{{ url_for('dashboard.index') }}" class="pure-menu-link">控制台</a></li>
                     {% if current_user.can('POST') %}
                     <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
-                        <a href="{{ url_for('dashboard.write_post') }}" class="pure-menu-link">撰写</a>
+                        <a href="#" class="pure-menu-link">撰写</a>
                         <ul class="pure-menu-children">
                             <li class="pure-menu-item"><a href="{{ url_for('dashboard.write_post') }}" class="pure-menu-link">撰写文章</a></li>
                             {% if current_user.can('PAGE') %}
@@ -17,7 +17,7 @@
                     {% endif %}
                     {% if current_user.can('POST') %}
                     <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
-                        <a href="{{ url_for('dashboard.manage_posts') }}" class="pure-menu-link">管理</a>
+                        <a href="#" class="pure-menu-link">管理</a>
                         <ul class="pure-menu-children">
                             <li class="pure-menu-item"><a href="{{ url_for('dashboard.manage_posts') }}" class="pure-menu-link">文章</a></li>
                             {% if current_user.can('PAGE') %}
@@ -33,7 +33,7 @@
                     </li>
                     {% endif %}
                     <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
-                        <a href="{{ url_for('dashboard.index') }}" class="pure-menu-link">设置</a>
+                        <a href="#" class="pure-menu-link">设置</a>
                         <ul class="pure-menu-children">
                             <!-- <li class="pure-menu-item"><a href="#" class="pure-menu-link">基本</a></li>
                             <li class="pure-menu-item"><a href="#" class="pure-menu-link">评论</a></li>
@@ -53,8 +53,13 @@
                             <img src="{{ current_user.email|gravatar(26) }}" class="gravatar" alt="{{ current_user.nickname }}">
                         </a>
                     </li>
-                    <!-- <li class="pure-menu-item"><a href="{{ url_for('main.index') }}" class="pure-menu-link">网站</a></li> -->
-                    <li class="pure-menu-item"><a href="{{ url_for('main.logout') }}" class="pure-menu-link">登出</a></li>
+                    <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
+                        <a href="#" class="pure-menu-link">{{ current_user.nickname }}</a>
+                        <ul class="pure-menu-children">
+                            <li class="pure-menu-item"><a href="{{ url_for('main.index') }}" class="pure-menu-link">站点</a></li>
+                            <li class="pure-menu-item"><a href="{{ url_for('main.logout') }}" class="pure-menu-link">登出</a></li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
         </div>

@@ -44,6 +44,10 @@ a:hover, a:focus {
     clear: both;
 }
 
+.dashboard .wrapper {
+    padding: 0 10px;
+}
+
 
 /* message */
 .message {
@@ -121,6 +125,10 @@ a:hover, a:focus {
 .header .menu-profile .gravatar {
     border-radius: 15px;
     margin-top: 3px;
+}
+
+.header .menu-profile .pure-menu-children {
+    left: -16px;
 }
 
 .inverted {
