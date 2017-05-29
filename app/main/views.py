@@ -11,8 +11,8 @@ from ..utils import ArchiveDict
 
 @main.route('/')
 def index():
-    arg_page = request.args.get('page', 1, type=int)
-    pagination = Post.query.filter_by(type='post').order_by(Post.created.desc()).paginate(arg_page, per_page=10, error_out=False)
+    page = request.args.get('page', 1, type=int)
+    pagination = Post.query.filter_by(type='post').order_by(Post.created.desc()).paginate(page, per_page=10, error_out=False)
     posts = pagination.items
     return render_template('index.html', posts=posts, pagination=pagination)
 
@@ -34,7 +34,7 @@ def archive(year):
 
     try:
         posts = archives[year]
-    except Exception:
+    except KeyError:
         abort(404)
         
     pagination = {'prev': archives.prev(year), 'next': archives.next(year)}

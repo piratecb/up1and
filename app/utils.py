@@ -27,7 +27,7 @@ class ArchiveDict(object):
         try:
             index = self.keys.index(key)
             return self.keys[index+1]
-        except Exception:
+        except (ValueError, IndexError):
             pass
 
     def next(self, key):
@@ -35,7 +35,7 @@ class ArchiveDict(object):
             index = self.keys.index(key)
             if index:
                 return self.keys[index-1]
-        except Exception:
+        except ValueError:
             pass
 
     def __getitem__(self, key):

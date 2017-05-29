@@ -1,43 +1,37 @@
 {% extends "dashboard/base.html" %}
-{% import "dashboard/_pagination.html" as macros %}
+{% from "_macros.html" import render_manage_pagination %}
 
 {% block title %}管理文章{% endblock %}
 
 {% block content %}
 <div class="manage-posts">
-    <h3>管理文章 <a href="{{ url_for('dashboard.write_post') }}">新增</a></h3>
-    <div class="table-wrap">
-        <table class="list-table">
-            <thead>
-                <tr>
-                    <th> </th>
-                    <th>标题</th>
-                    <th>作者</th>
-                    <th>标签</th>
-                    <th>日期</th>
-                    <th> </th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for post in posts %}
-                <tr>
-                    <td> </td>
-                    <td><a href="{{ url_for('dashboard.edit_post', post_id=post.id) }}">{{ post.title }}</a></td>
-                    <td><a href="">{{ post.author.username }}</a></td>
-                    <td>
-                    {% for meta in post.metas %}
-                        <a href="">{{ meta.name }}</a>
-                    {% endfor %}
-                    </td>
-                    <td>{{ post.created|strftime('%m-%d') }}</td>
-                    <td><a href="{{ url_for('dashboard.delete_post', post_id=post.id) }}" class="post-delete"> 删除 </a></td>
-                </tr>
+    <h3><a href="{{ url_for('dashboard.manage_posts') }}">管理文章</a> <a href="{{ url_for('dashboard.write_post') }}">+</a></h3>
+    <table class="list-table">
+        <thead>
+            <tr>
+                <th>标题</th>
+                <th>作者</th>
+                <th>标签</th>
+                <th>日期</th>
+                <th> </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for post in posts %}
+            <tr>
+                <td><a href="{{ url_for('dashboard.edit_post', post_id=post.id) }}">{{ post.title }}</a></td>
+                <td><a href="{{ url_for('dashboard.manage_posts', uid=post.author.id) }}">{{ post.author.username }}</a></td>
+                <td>
+                {% for meta in post.metas %}
+                    <a href="{{ url_for('dashboard.manage_posts', uid=request.args.uid, tag=meta.slug) }}">{{ meta.name }}</a>
                 {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    <nav class="pagination align-center">
-    {{ macros.widget(pagination, 'dashboard.manage_posts') }}
-    </nav>
+                </td>
+                <td>{{ post.created|strftime('%m-%d') }}</td>
+                <td class="post-delete"><a href="{{ url_for('dashboard.delete_post', post_id=post.id) }}">删除</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {{ render_manage_pagination(pagination, 'dashboard.manage_posts', uid=request.args.uid, tag=request.args.tag) }}
 </div>
 {% endblock %}

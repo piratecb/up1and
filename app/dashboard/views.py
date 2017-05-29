@@ -3,7 +3,7 @@ from flask_login import login_required, current_user
 from . import dashboard
 from .forms import UserEditForm, PostForm, ProfileEditForm, ChangePasswordForm
 from .. import db
-from ..models import Post
+from ..models import Post, Meta
 from ..utils import permission_required, admin_required
 
 
@@ -49,7 +49,7 @@ def edit_post(post_id):
         return redirect(url_for('dashboard.manage_posts'))
     form.title.data = post.title
     form.content.data = post.content
-    return render_template('dashboard/edit_post.html', form=form, editor_id='editor-post' + str(post_id))
+    return render_template('dashboard/edit_post.html', form=form, editor_id='editor-post-' + str(post_id))
 
 @dashboard.route('/delete-post/<int:post_id>')
 @login_required
@@ -68,13 +68,23 @@ def delete_post(post_id):
 @login_required
 @permission_required('POST')
 def manage_posts():
-    if current_user.can('OPERATE'):
-        query = Post.query.filter_by(type='post')
-    else:
-        query = Post.query.filter_by(type='post', author_id=current_user.id)
+    page = request.args.get('page', 1, type=int)
+    uid = request.args.get('uid', type=int)
+    slug = request.args.get('tag')
 
-    arg_page = request.args.get('page', 1, type=int)
-    pagination = query.order_by(Post.created.desc()).paginate(arg_page, per_page=10, error_out=False)
+    if slug:
+        tag = Meta.query.filter_by(type='tag', slug=slug).first_or_404()
+        query = tag.posts.order_by(Post.created.desc())
+    else:
+        query = Post.query.filter_by(type='post').order_by(Post.created.desc())
+
+    if uid:
+        query = query.filter_by(author_id=uid)
+
+    if not current_user.can('OPERATE'):
+        query = query.filter_by(author_id=current_user.id)
+
+    pagination = query.paginate(page, per_page=10, error_out=False)
     posts = pagination.items
     return render_template('dashboard/manage_posts.html', posts=posts, pagination=pagination)
 
