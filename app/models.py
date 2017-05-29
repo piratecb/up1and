@@ -101,7 +101,7 @@ class Post(db.Model):
                         backref=db.backref('posts', lazy='dynamic'))
 
     def __repr__(self):
-        return '<Post %r>' % (self.content)
+        return '<Post %r %r>' % (self.title, self.created)
 
     @staticmethod
     def generate_fake(count=100):

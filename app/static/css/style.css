@@ -307,9 +307,7 @@ tbody tr:nth-child(odd) th {
   color: #333; }
 
 .list-pagination {
-  margin-top: 2rem;
-  padding-top: 2rem;
-  padding-bottom: 2rem
+  padding: 2rem 0
 }
 
 .list-pagination-previous {

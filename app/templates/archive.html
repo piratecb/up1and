@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "_macro.html" import render_pagination %}
+{% from "_macro.html" import render_archive_pagination %}
 
 {% block title %}UP1AND{% endblock %}
 
@@ -18,6 +18,6 @@
       </a>
   </div>
   {% endfor %}
-<!-- {{ render_pagination(pagination, 'main.index') }} -->
+  {{ render_archive_pagination(pagination, 'main.archive') }}
 </div>
 {% endblock %}

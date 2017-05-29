@@ -23,3 +23,14 @@
     {% endif %}
 </div>
 {% endmacro %}
+
+{% macro render_archive_pagination(pagination, endpoint) %}
+<div class="list-pagination">
+    {% if pagination.prev %}
+        <span class="list-pagination-previous"><a href="{{ url_for(endpoint, year=pagination.prev, **kwargs) }}">&lt; {{ pagination.prev }}</a></span>
+    {% endif %}
+    {% if pagination.next %}
+        <span class="list-pagination-next"><a href="{{ url_for(endpoint, year=pagination.next, **kwargs) }}">{{ pagination.next }} &gt;</a></span>
+    {% endif %}
+</div>
+{% endmacro %}

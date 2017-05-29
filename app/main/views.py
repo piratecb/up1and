@@ -1,9 +1,12 @@
-from flask import render_template, redirect, request, url_for, flash, current_app
+import datetime
+from itertools import groupby
+from flask import render_template, redirect, request, url_for, flash, current_app, abort
 from flask_login import login_required, login_user, logout_user, current_user
 from . import main
 from .forms import LoginForm, RegistrationForm
 from .. import db
 from ..models import User, Post, Meta
+from ..utils import ArchiveDict
 
 
 @main.route('/')
@@ -23,12 +26,19 @@ def page(slug):
     page = Post.query.filter_by(type='page', slug=slug).first_or_404()
     return render_template('page.html', page=page)
 
-@main.route('/archive/')
-def archive():
-    arg_page = request.args.get('page', 1, type=int)
-    pagination = Post.query.filter_by(type='post').order_by(Post.created.desc()).paginate(arg_page, per_page=10, error_out=False)
-    posts = pagination.items
-    return render_template('archive.html', posts=posts, pagination=pagination)
+@main.route('/archive/', defaults={'year': datetime.datetime.now().year})
+@main.route('/archive/<int:year>')
+def archive(year):
+    query = Post.query.filter_by(type='post').order_by(Post.created.desc())
+    archives = ArchiveDict((year, list(posts)) for year, posts in groupby(query, lambda post: post.created.year))
+
+    try:
+        posts = archives[year]
+    except Exception:
+        abort(404)
+        
+    pagination = {'prev': archives.prev(year), 'next': archives.next(year)}
+    return render_template('archive.html', posts=posts, pagination=pagination, year=year)
 
 @main.route('/rss.xml')
 def rss():
@@ -41,6 +51,7 @@ def tags(slug):
     posts = tag.posts.order_by(Post.created.desc()).all()
     return render_template('tags.html', posts=posts, tag=tag)
 
+
 @main.route('/account/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
@@ -52,7 +63,6 @@ def login():
         flash('用户名或密码错误')
     return render_template('account/login.html', form=form, title='Login')
 
-
 @main.route('/account/signup', methods=['GET', 'POST'])
 def signup():
     form = RegistrationForm()
@@ -62,7 +72,6 @@ def signup():
         flash('注册成功')
         return redirect(url_for('main.index'))
     return render_template('account/signup.html', form=form, title='Sign Up')
-
 
 @main.route('/account/logout')
 @login_required

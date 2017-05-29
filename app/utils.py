@@ -1,4 +1,5 @@
 from functools import wraps
+from collections import OrderedDict
 from flask import abort
 from flask_login import current_user
 
@@ -15,3 +16,27 @@ def permission_required(permission):
 
 def admin_required(func):
     return permission_required('ADMINISTER')(func)
+
+
+class ArchiveDict(object):
+    def __init__(self, archives):
+        self.dict = OrderedDict(archives)
+        self.keys = list(self.dict.keys())
+
+    def prev(self, key):
+        try:
+            index = self.keys.index(key)
+            return self.keys[index+1]
+        except Exception:
+            pass
+
+    def next(self, key):
+        try:
+            index = self.keys.index(key)
+            if index:
+                return self.keys[index-1]
+        except Exception:
+            pass
+
+    def __getitem__(self, key):
+        return self.dict[key]
