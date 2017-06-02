@@ -1,0 +1,25 @@
+{% extends "dashboard/base.html" %}
+{% from "_macros.html" import render_field %}
+
+{% block title %}预览文章{% endblock %}
+
+{% block content %}
+<div class="post-preview pure-g">
+    <div class="pure-u-1-5">
+        <h3>{{ post.title }}</h3>
+        <form class="form" action="" method="post">
+            {{ form.hidden_tag() }}
+            {{ render_field(form.slug, 'slug') }}
+            {{ render_field(form.tags, 'tags') }}
+            <div class="tags-input">
+                {% for meta in metas %}
+                    <span class="tag"><a href="#{{ meta.slug }}">{{ meta.name }}</a></span>
+                {% endfor %}
+            </div>
+            <div class="form-field">
+                {{ form.submit(class='button') }}
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

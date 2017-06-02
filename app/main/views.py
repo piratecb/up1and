@@ -3,7 +3,7 @@ from itertools import groupby
 from flask import render_template, redirect, request, url_for, flash, current_app, abort
 from flask_login import login_required, login_user, logout_user, current_user
 from . import main
-from .forms import LoginForm, RegistrationForm
+from .forms import LoginForm, SignupForm
 from .. import db
 from ..models import User, Post, Meta
 from ..utils import ArchiveDict
@@ -12,7 +12,7 @@ from ..utils import ArchiveDict
 @main.route('/')
 def index():
     page = request.args.get('page', 1, type=int)
-    pagination = Post.query.filter_by(type='post').order_by(Post.created.desc()).paginate(page, per_page=10, error_out=False)
+    pagination = Post.query.filter_by(type='post', status=True).order_by(Post.created.desc()).paginate(page, per_page=10, error_out=False)
     posts = pagination.items
     return render_template('index.html', posts=posts, pagination=pagination)
 
@@ -29,7 +29,7 @@ def page(slug):
 @main.route('/archive/', defaults={'year': datetime.datetime.now().year})
 @main.route('/archive/<int:year>')
 def archive(year):
-    query = Post.query.filter_by(type='post').order_by(Post.created.desc())
+    query = Post.query.filter_by(type='post', status=True).order_by(Post.created.desc())
     archives = ArchiveDict((year, list(posts)) for year, posts in groupby(query, lambda post: post.created.year))
 
     try:
@@ -42,7 +42,7 @@ def archive(year):
 
 @main.route('/rss.xml')
 def rss():
-    posts = Post.query.filter_by(type='post').all()[:10]
+    posts = Post.query.filter_by(type='post', status=True).order_by(Post.created.desc()).limit(10)
     return render_template('rss.xml', posts=posts)
 
 @main.route('/tag/<path:slug>')
@@ -65,7 +65,7 @@ def login():
 
 @main.route('/account/signup', methods=['GET', 'POST'])
 def signup():
-    form = RegistrationForm()
+    form = SignupForm()
     if form.validate_on_submit():
         user = User(username=form.username.data, email=form.email.data, password=form.password.data)
         db.session.add(user)

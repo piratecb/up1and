@@ -1,7 +1,7 @@
 {% macro render_field(field, id) %}
         <div class="form-field">
             {{ field.label(class='form-field-label') }}
-            {{ field(id=id) }}
+            {{ field(id=id, **kwargs) }}
             {% if field.errors %}
                 <ul class="form-field-errors">
                 {% for error in field.errors %}

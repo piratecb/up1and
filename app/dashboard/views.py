@@ -1,9 +1,9 @@
 from flask import render_template, redirect, request, url_for, flash, current_app, abort
 from flask_login import login_required, current_user
 from . import dashboard
-from .forms import UserEditForm, PostForm, ProfileEditForm, ChangePasswordForm
+from .forms import PostForm, PostPreviewForm, ProfileForm, UserForm, MetaForm
 from .. import db
-from ..models import Post, Meta
+from ..models import Post, Meta, User
 from ..utils import permission_required, admin_required
 
 
@@ -17,52 +17,64 @@ def index():
     return render_template('dashboard/index.html', posts=posts)
 
 
-@dashboard.route('/write-post', methods=['GET', 'POST'])
+@dashboard.route('/post-draft', methods=['GET', 'POST'])
 @login_required
 @permission_required('POST')
-def write_post():
+def post_draft():
+    pid = request.args.get('pid', type=int)
+    do = request.args.get('do')
+    editor_id = '-'.join(['editor-post', str(pid)])
     form = PostForm()
+
+    if pid:
+        post = Post.query.get_or_404(pid)
+
+        if do == 'delete':
+            if not current_user.can('OPERATE') and current_user.id != post.author_id:
+                abort(403)
+
+            db.session.delete(post)
+            flash('你已成功删除了文章 %s' % post.title)
+            return redirect(url_for('dashboard.manage_posts'))
+
+        if form.validate_on_submit():
+            post.title = form.title.data
+            post.headline = form.headline.data
+            post.content = form.content.data
+            db.session.add(post)
+            return redirect(url_for('dashboard.post_preview', pid=post.id))
+
+        form.title.data = post.title
+        form.headline.data = post.headline
+        form.content.data = post.content
+    else:
+        if form.validate_on_submit():
+            post = Post(title=form.title.data, headline=form.headline.data, content=form.content.data, status=False, author_id=current_user.id)
+            db.session.add(post)
+            db.session.flush()
+            return redirect(url_for('dashboard.post_preview', pid=post.id))
+
+    return render_template('dashboard/post_draft.html', form=form, editor_id=editor_id)
+
+
+@dashboard.route('/post-preview', methods=['GET', 'POST'])
+@login_required
+@permission_required('POST')
+def post_preview():
+    pid = request.args.get('pid', type=int)
+    form = PostPreviewForm()
+    post = Post.query.get_or_404(pid)
+
+    metas = Meta.query.filter_by(type='tag')
+
     if form.validate_on_submit():
-        post = Post(title=form.title.data, content=form.content.data, author_id=current_user.id)
+        post.slug = form.slug.data
+        post.status = True
         db.session.add(post)
-        db.session.flush()
         flash('文章已发布 %s' % post.title)
         return redirect(url_for('dashboard.manage_posts'))
-    return render_template('dashboard/edit_post.html', form=form, editor_id='editor-post')
+    return render_template('dashboard/post_preview.html', form=form, post=post, metas=metas)
 
-@dashboard.route('/edit-post/<int:post_id>', methods=['GET', 'POST'])
-@login_required
-@permission_required('POST')
-def edit_post(post_id):
-    post = Post.query.get_or_404(post_id)
-
-    if not current_user.can('OPERATE') and current_user.id != post.author_id:
-        abort(403)
-
-    form = PostForm()
-
-    if form.validate_on_submit():
-        post.title = form.title.data
-        post.content = form.content.data
-        db.session.add(post)
-        flash('文章已更新 %s' % post.title)
-        return redirect(url_for('dashboard.manage_posts'))
-    form.title.data = post.title
-    form.content.data = post.content
-    return render_template('dashboard/edit_post.html', form=form, editor_id='editor-post-' + str(post_id))
-
-@dashboard.route('/delete-post/<int:post_id>')
-@login_required
-@permission_required('POST')
-def delete_post(post_id):
-    post = Post.query.get_or_404(post_id)
-
-    if not current_user.can('OPERATE') and current_user.id != post.author_id:
-        abort(403)
-
-    db.session.delete(post)
-    flash('你已成功删除了文章 %s' % post.title)
-    return redirect(url_for('dashboard.manage_posts'))
 
 @dashboard.route('/manage-posts')
 @login_required
@@ -89,6 +101,51 @@ def manage_posts():
     return render_template('dashboard/manage_posts.html', posts=posts, pagination=pagination)
 
 
+@dashboard.route('/manage-metas')
+@login_required
+@permission_required('POST')
+def manage_metas():
+    metas = Meta.query.filter_by(type='tag')
+    return render_template('dashboard/manage_metas.html', metas=metas)
+
+
+@dashboard.route('/meta', methods=['GET', 'POST'])
+@login_required
+@permission_required('POST')
+def meta():
+    slug = request.args.get('slug')
+    do = request.args.get('do')
+    form = MetaForm()
+
+    if slug:
+        meta = Meta.query.filter_by(slug=slug).first_or_404()
+
+        if do == 'delete':
+            db.session.delete(meta)
+            flash('你已成功删除了标签 %s' % meta.name)
+            return redirect(url_for('dashboard.manage_metas'))
+
+        if form.validate_on_submit():
+            meta.slug = form.slug.data
+            meta.name = form.name.data
+            meta.type = form.type.data
+            meta.description = form.description.data
+            db.session.add(meta)
+            return redirect(url_for('dashboard.manage_metas'))
+
+        form.slug.data = meta.slug
+        form.name.data = meta.name
+        form.type.data = meta.type
+        form.description.data = meta.description
+    else:
+        if form.validate_on_submit():
+            meta = Meta(slug=form.slug.data, name=form.name.data, type=form.type.data, description=form.type.data)
+            db.session.add(meta)
+            return redirect(url_for('dashboard.manage_metas'))
+
+    return render_template('dashboard/meta.html', form=form)
+
+
 @dashboard.route('/write-page')
 @login_required
 @permission_required('PAGE')
@@ -99,37 +156,69 @@ def write_page():
 @dashboard.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
-    profile_form = ProfileEditForm(prefix="profile_form")
-    password_form = ChangePasswordForm(prefix="password_form")
+    form = ProfileForm()
 
-    if profile_form.validate_on_submit() and profile_form.submit.data:
-        print('profile')
-        return redirect(url_for('dashboard.profile'))
-
-    if password_form.validate_on_submit() and password_form.submit.data:
-        print('password')
-        return redirect(url_for('dashboard.profile'))
-
-    return render_template('dashboard/profile.html', profile_form=profile_form, password_form=password_form)
-
-
-@dashboard.route('/user', methods=['GET', 'POST'])
-@login_required
-@admin_required
-def user():
-    form = UserEditForm()
     if form.validate_on_submit():
         if form.password.data:
             current_user.password = form.password.data
             flash('密码修改成功')
         current_user.email = form.email.data
         current_user.nickname = form.nickname.data
-        current_user.group = form.group.data
         db.session.add(current_user)
         flash('用户资料更新成功')
-        return redirect(url_for('dashboard.user'))
+        return redirect(url_for('dashboard.profile'))
+
     form.email.data = current_user.email
     form.nickname.data = current_user.nickname
-    form.group.data = current_user.group
+    return render_template('dashboard/profile.html', form=form)
+
+
+@dashboard.route('/manage-users')
+@login_required
+@admin_required
+def manage_users():
+    page = request.args.get('page', 1, type=int)
+    pagination = User.query.paginate(page, per_page=10, error_out=False)
+    users = pagination.items
+    return render_template('dashboard/manage_users.html', users=users, pagination=pagination)
+
+@dashboard.route('/user', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def user():
+    uid = request.args.get('uid', type=int)
+    do = request.args.get('do')
+    form = UserForm()
+
+    if uid:
+        user = User.query.get_or_404(uid)
+
+        if do == 'delete':
+            db.session.delete(user)
+            flash('你已删除了用户 %s' % user.username)
+            return redirect(url_for('dashboard.manage_users'))
+
+        if form.validate_on_submit():
+            if form.password.data:
+                user.password = form.password.data
+                flash('密码修改成功')
+            user.email = form.email.data
+            user.nickname = form.nickname.data
+            user.group = form.group.data
+            db.session.add(user)
+            flash('用户资料更新成功')
+            return redirect(url_for('dashboard.manage_users'))
+
+        form.username.data = user.username
+        form.email.data = user.email
+        form.nickname.data = user.nickname
+        form.group.data = user.group
+    else:
+        if form.validate_on_submit():
+            user = User(username=form.username.data, email=form.email.data, password=form.password.data, nickname=form.nickname.data, group=form.group.data)
+            db.session.add(user)
+            flash('添加新用户')
+            return redirect(url_for('dashboard.manage_users'))
+
     return render_template('dashboard/user.html', form=form)
 

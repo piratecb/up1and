@@ -8,7 +8,7 @@
     <div class="welcome-board">
             <p>目前有 <em>{{ posts.count() }}</em> 篇文章, 并有 <em>2</em> 条关于你的评论在 <em>2</em> 个分类中 <br>点击下面的链接快速开始:</p>
             <ul class="clearfix">
-                <li><a href="{{ url_for('dashboard.write_post') }}">撰写新文章</a></li>
+                <li><a href="{{ url_for('dashboard.post_draft') }}">撰写新文章</a></li>
                 <li><a href="#">系统设置</a></li>
             </ul>
     </div>

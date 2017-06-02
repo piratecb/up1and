@@ -1,23 +1,25 @@
 {% extends "dashboard/base.html" %}
-{% from "_macros.html" import render_field %}
 
 {% block title %}撰写新文章{% endblock %}
 
 {% block content %}
 
-<div class="write-post">
-        <h2>撰写文章</h2>
-        <form class="form" action="" method="post">
+<div class="post-draft">
+        <form class="post-form" action="" method="post">
             {{ form.hidden_tag() }}
-            {{ render_field(form.title, 'title') }}
-            <div class="form-field">
+            <div class="post-form-field title">
+                {{ form.title(id=title) }}
+            </div>
+            <div class="post-form-field headline">
+                {{ form.headline(id=headline) }}
+            </div>
+            <div class="post-form-field content">
                 <div id="editor-wrapper">
                     {{ form.content(id=editor_id) }}
                 </div>
             </div>
             <div class="form-field">
                 {{ form.submit(class='button') }}
-                {{ form.save_draft(class='button button-primary') }}
             </div>
         </form>
 </div>
@@ -40,7 +42,8 @@
         autosave: {
             enabled: true,
             unique_id: "{{ editor_id }}"
-        }
+        },
+        // toolbar: false
     })
 
 </script>

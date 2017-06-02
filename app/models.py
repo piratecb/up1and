@@ -84,7 +84,7 @@ class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(64))
     slug = db.Column(db.String(64))
-    description = db.Column(db.String(128))
+    headline = db.Column(db.String(128))
     content = db.Column(db.Text)
     created = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     updated = db.Column(db.DateTime, onupdate=datetime.datetime.utcnow)
@@ -103,20 +103,6 @@ class Post(db.Model):
     def __repr__(self):
         return '<Post %r %r>' % (self.title, self.created)
 
-    @staticmethod
-    def generate_fake(count=100):
-        from random import seed, randint
-        import forgery_py
-        seed()
-        user_count = User.query.count()
-        for i in range(count):
-            user = User.query.offset(randint(0, user_count - 1)).first()
-            record = Post(title=forgery_py.lorem_ipsum.title(words_quantity=4),
-                        content=forgery_py.lorem_ipsum.paragraph(separator='\n\n', wrap_start='', wrap_end='', html=False, sentences_quantity=3), 
-                        created=forgery_py.date.date(True), 
-                        author_id=user.id)
-            db.session.add(record)
-        db.session.commit()
 
 
 class AnonymousUser(AnonymousUserMixin):

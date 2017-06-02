@@ -7,17 +7,27 @@ html, button, input, select, textarea,
 }
 
 a {
-    color: rgba(0,0,0,.98);
+    color: rgba(0,0,0,.68);
 /*    color: #217ac0;*/
     text-decoration: none;
 }
 a:hover, a:focus {
-    color: rgba(0,0,0,.6);
+    color: rgba(0,0,0,.86);
 }
 
 ::selection, .wrapper ::selection {
     background-color: #333;
     color: #f9f9f9;
+}
+
+.pure-g > div {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.l-box {
+    padding: .5em;
 }
 
 .clearfix {
@@ -45,7 +55,7 @@ a:hover, a:focus {
 }
 
 .dashboard .wrapper {
-    padding: 0 10px;
+    padding: 0 .5em;
 }
 
 
@@ -293,4 +303,67 @@ table.unstyled th {
 
 .list-table tr:hover .post-delete a {
     display: inline;
+}
+
+
+/* Profile */
+.vcard {
+    margin: 1.2em 2em 0 0;
+    float: right
+}
+
+.vcard img{
+    border-radius: 5px;
+}
+
+
+/* Post */
+
+.post-form .post-form-field input {
+    border: 0;
+    outline: 0;
+    width: 100%;
+}
+
+.post-form .headline {
+    font-size: 20px;
+    font-weight: 300;
+    color: rgba(0,0,0,.42);
+    margin-bottom: 16px; 
+}
+
+.post-form .title {
+    font-weight: 600;
+    font-size: 24px;
+    font-family: inherit;
+    color: rgba(0,0,0,.98);
+    margin-bottom: 6px;
+}
+
+/*.post-form textarea {
+    display: block;
+    font-size: 16px;
+    font-family: inherit;
+    line-height: 22px;
+    overflow-x: hidden;
+    resize: none;
+    border: none;
+    outline: none;
+    width: 100%;
+    padding: 0 0 60px;
+    background-color: transparent;
+}*/
+
+
+/* metas */
+
+span.tag {
+    font-size: 12px;
+    display: inline-block;
+    line-height: 20px;
+    border-radius: 20px;
+    padding: 0 10px;
+    border: 1px solid rgba(0,0,0,.04);
+    cursor: pointer;
+    margin: 3px 2px;
 }

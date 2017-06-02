@@ -5,7 +5,7 @@
 
 {% block content %}
 <div class="manage-posts">
-    <h3><a href="{{ url_for('dashboard.manage_posts') }}">管理文章</a> <a href="{{ url_for('dashboard.write_post') }}">+</a></h3>
+    <h3><a href="{{ url_for('dashboard.manage_posts') }}">管理文章</a> <a href="{{ url_for('dashboard.post_draft') }}">+</a></h3>
     <table class="list-table">
         <thead>
             <tr>
@@ -19,7 +19,7 @@
         <tbody>
             {% for post in posts %}
             <tr>
-                <td><a href="{{ url_for('dashboard.edit_post', post_id=post.id) }}">{{ post.title }}</a></td>
+                <td><a href="{{ url_for('dashboard.post_draft', pid=post.id) }}">{{ post.title }}</a></td>
                 <td><a href="{{ url_for('dashboard.manage_posts', uid=post.author.id) }}">{{ post.author.username }}</a></td>
                 <td>
                 {% for meta in post.metas %}
@@ -27,11 +27,20 @@
                 {% endfor %}
                 </td>
                 <td>{{ post.created|strftime('%m-%d') }}</td>
-                <td class="post-delete"><a href="{{ url_for('dashboard.delete_post', post_id=post.id) }}">删除</a></td>
+                <td class="post-delete"><a href="{{ url_for('dashboard.post_draft', pid=post.id, do='delete') }}">删除</a></td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
+    <!--     <ul class="post-list">
+        <li><a href="/~/posts/150" class="">这里的丁香已经盛开了</a> 
+            <div class="post-meta">
+                <span>zh</span> 
+                <span>article</span> 
+                <span>May 30, 2017</span>
+            </div>
+        </li>
+    </ul> -->
     {{ render_manage_pagination(pagination, 'dashboard.manage_posts', uid=request.args.uid, tag=request.args.tag) }}
 </div>
 {% endblock %}

@@ -8,7 +8,7 @@
                     <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
                         <a href="#" class="pure-menu-link">撰写</a>
                         <ul class="pure-menu-children">
-                            <li class="pure-menu-item"><a href="{{ url_for('dashboard.write_post') }}" class="pure-menu-link">撰写文章</a></li>
+                            <li class="pure-menu-item"><a href="{{ url_for('dashboard.post_draft') }}" class="pure-menu-link">撰写文章</a></li>
                             {% if current_user.can('PAGE') %}
                             <li class="pure-menu-item"><a href="{{ url_for('dashboard.write_page') }}" class="pure-menu-link">创建页面</a></li>
                             {% endif %}
@@ -24,10 +24,10 @@
                             <li class="pure-menu-item"><a href="#" class="pure-menu-link">独立页面</a></li>
                             {% endif %}
                             <!-- <li class="pure-menu-item"><a href="#" class="pure-menu-link">评论</a></li> -->
-                            <li class="pure-menu-item"><a href="#" class="pure-menu-link">标签</a></li>
+                            <li class="pure-menu-item"><a href="{{ url_for('dashboard.manage_metas') }}" class="pure-menu-link">标签</a></li>
                             <!-- <li class="pure-menu-item"><a href="#" class="pure-menu-link">文件</a></li> -->
                             {% if current_user.is_admin() %}
-                            <li class="pure-menu-item"><a href="{{ url_for('dashboard.user') }}" class="pure-menu-link">用户</a></li>
+                            <li class="pure-menu-item"><a href="{{ url_for('dashboard.manage_users') }}" class="pure-menu-link">用户</a></li>
                             {% endif %}
                         </ul>
                     </li>
