@@ -251,7 +251,6 @@ tbody tr:nth-child(odd) th {
 .post-meta {
   margin-bottom: 2rem;
   font-size: .75rem;
-  color: rgba(0,0,0,.42);
 }
 
 .post-meta time {
@@ -260,7 +259,7 @@ tbody tr:nth-child(odd) th {
 
 .post-meta a {
   text-decoration: none;
-  color: rgba(0,0,0,.42);
+  color: #515151;
   font-weight: 400;
 }
 

@@ -30,11 +30,8 @@
 <link rel="stylesheet" href="https://cdn.bootcss.com/simplemde/1.11.2/simplemde.min.css"/>
 <script src="https://cdn.bootcss.com/simplemde/1.11.2/simplemde.min.js"></script>
 <script type="text/javascript">
-    var $ = function (id) {
-        return document.getElementById(id)
-    }
     var editor = new SimpleMDE({
-        element: $("{{ editor_id }}"),
+        element: document.querySelector("#{{ editor_id }}"),
         spellChecker: false,
         shortcuts: {
             drawTable: "Cmd-Alt-T"

@@ -64,15 +64,25 @@ def post_preview():
     pid = request.args.get('pid', type=int)
     form = PostPreviewForm()
     post = Post.query.get_or_404(pid)
-
     metas = Meta.query.filter_by(type='tag')
 
     if form.validate_on_submit():
         post.slug = form.slug.data
-        post.status = True
+        post.status = form.status.data
+
+        form_metas = [Meta.query.filter_by(type='tag', slug=slug).first() for slug in form.tags.data.split()]
+        for meta in set(form_metas)^set(post.metas):
+            if meta in post.metas:
+                post.metas.remove(meta)
+            else:
+                post.metas.append(meta)
+
         db.session.add(post)
         flash('文章已发布 %s' % post.title)
-        return redirect(url_for('dashboard.manage_posts'))
+        return redirect(url_for('dashboard.post_preview', pid=post.id))
+    form.slug.data = post.slug
+    form.tags.data = ' '.join([meta.slug for meta in post.metas])
+    form.status.data = post.status
     return render_template('dashboard/post_preview.html', form=form, post=post, metas=metas)
 
 

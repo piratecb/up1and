@@ -357,7 +357,7 @@ table.unstyled th {
 
 /* metas */
 
-span.tag {
+a.tag {
     font-size: 12px;
     display: inline-block;
     line-height: 20px;
@@ -366,4 +366,8 @@ span.tag {
     border: 1px solid rgba(0,0,0,.04);
     cursor: pointer;
     margin: 3px 2px;
+}
+
+.tags-choices {
+    margin-top: 8.5em;
 }

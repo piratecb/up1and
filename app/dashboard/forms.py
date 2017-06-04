@@ -30,6 +30,7 @@ class PostForm(FlaskForm):
 class PostPreviewForm(FlaskForm):
     slug = StringField('Slug', validators=[Length(max=64)])
     tags = StringField('Tags', validators=[Length(max=32)])
+    status = BooleanField('Publish')
     submit = SubmitField('发布')
 
 
