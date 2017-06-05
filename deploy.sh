@@ -8,5 +8,7 @@ git clean -f
 git pull
 git checkout master
 
+chmod +x deploy.sh
+
 supervisorctl restart up1and
 service nginx restart
