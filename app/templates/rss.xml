@@ -2,7 +2,7 @@
 <rss version="2.0">
 <channel>
   <title>Up1and</title>
-  <link>{{ url_for('main.index', _external=True) }}</link>
+  <link>{{ url_for('main.index', _external=True, _scheme='https') }}</link>
   <description>哪有什么诗和远方啊 牛肉罐头就是最伟大的航路呀 除了啃骨头没有什么算劳动啊 只有人类才操心明天</description>
   {% for post in posts %}
   <item>

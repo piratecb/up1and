@@ -21,6 +21,11 @@ def post(post_id):
     post = Post.query.get_or_404(post_id)
     return render_template('post.html', post=post)
 
+@main.route('/amp/post/<int:post_id>')
+def amp(post_id):
+    post = Post.query.get_or_404(post_id)
+    return render_template('amp.html', post=post)
+
 @main.route('/<path:slug>')
 def page(slug):
     page = Post.query.filter_by(type='page', slug=slug).first_or_404()
