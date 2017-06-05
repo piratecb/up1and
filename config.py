@@ -4,6 +4,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config:
     SECRET_KEY = os.environ.get('UP1AND_SECRET_KEY') or 'Waltz in A flat, Op.39 No.15'
+    ANALYTICS_ID = os.environ.get('UP1AND_ANALYTICS_ID') or 'YOUR GOOGLE ANALYTICS ID'
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 

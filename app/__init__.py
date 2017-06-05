@@ -59,4 +59,6 @@ def create_app(config_name):
         return '{url}/{hash}?s={size}&d={default}&r={rating}'.format(
             url=url, hash=hash, size=size, default=default, rating=rating)
 
+    app.jinja_env.globals['ANALYTICS_ID'] = config[config_name].ANALYTICS_ID
+
     return app

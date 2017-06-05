@@ -49,7 +49,7 @@ def post_draft():
         form.content.data = post.content
     else:
         if form.validate_on_submit():
-            post = Post(title=form.title.data, headline=form.headline.data, content=form.content.data, status=False, author_id=current_user.id)
+            post = Post(title=form.title.data, headline=form.headline.data, content=form.content.data, author_id=current_user.id)
             db.session.add(post)
             db.session.flush()
             return redirect(url_for('dashboard.post_preview', pid=post.id))
