@@ -19,6 +19,8 @@ def index():
 @main.route('/post/<int:post_id>')
 def post(post_id):
     post = Post.query.get_or_404(post_id)
+    post.views += 1
+    db.session.add(post)
     return render_template('post.html', post=post)
 
 @main.route('/amp/post/<int:post_id>')
