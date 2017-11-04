@@ -1,37 +1,41 @@
 import datetime
+
 from itertools import groupby
+
 from flask import render_template, redirect, request, url_for, flash, current_app, abort
 from flask_login import login_required, login_user, logout_user, current_user
+
 from . import main
 from .forms import LoginForm, SignupForm
 from .. import db
 from ..models import User, Post, Meta
 from ..utils import ArchiveDict
 
+theme = 'kiko/'
 
 @main.route('/')
 def index():
     page = request.args.get('page', 1, type=int)
     pagination = Post.query.filter_by(type='post', status=True).order_by(Post.created.desc()).paginate(page, per_page=10, error_out=False)
     posts = pagination.items
-    return render_template('index.html', posts=posts, pagination=pagination)
+    return render_template(theme + 'index.html', posts=posts, pagination=pagination)
 
-@main.route('/post/<int:post_id>')
-def post(post_id):
-    post = Post.query.get_or_404(post_id)
+@main.route('/post/<int:id>')
+def post(id):
+    post = Post.query.get_or_404(id)
     post.views += 1
     db.session.add(post)
-    return render_template('post.html', post=post)
+    return render_template(theme + 'post.html', post=post)
 
-@main.route('/amp/post/<int:post_id>')
-def amp(post_id):
-    post = Post.query.get_or_404(post_id)
-    return render_template('amp.html', post=post)
+@main.route('/amp/post/<int:id>')
+def amp(id):
+    post = Post.query.get_or_404(id)
+    return render_template(theme + 'amp.html', post=post)
 
 @main.route('/<path:slug>')
 def page(slug):
     page = Post.query.filter_by(type='page', slug=slug).first_or_404()
-    return render_template('page.html', page=page)
+    return render_template(theme + 'page.html', page=page)
 
 @main.route('/archive/', defaults={'year': datetime.datetime.now().year})
 @main.route('/archive/<int:year>')
@@ -45,18 +49,18 @@ def archive(year):
         abort(404)
         
     pagination = {'prev': archives.prev(year), 'next': archives.next(year)}
-    return render_template('archive.html', posts=posts, pagination=pagination, year=year)
+    return render_template(theme + 'archive.html', posts=posts, pagination=pagination, year=year)
 
 @main.route('/rss.xml')
 def rss():
     posts = Post.query.filter_by(type='post', status=True).order_by(Post.created.desc()).limit(10)
-    return render_template('rss.xml', posts=posts)
+    return render_template(theme + 'rss.xml', posts=posts)
 
 @main.route('/tag/<path:slug>')
 def tags(slug):
     tag = Meta.query.filter_by(type='tag', slug=slug).first_or_404()
     posts = tag.posts.order_by(Post.created.desc()).all()
-    return render_template('tags.html', posts=posts, tag=tag)
+    return render_template(theme + 'tags.html', posts=posts, tag=tag)
 
 
 @main.route('/account/login', methods=['GET', 'POST'])

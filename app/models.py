@@ -1,8 +1,11 @@
+import json
 import datetime
+
 from flask import current_app
 from flask_login import UserMixin, AnonymousUserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db, login_manager
+
 
 class Permission:
     COMMENT = 0x01
@@ -102,7 +105,6 @@ class Post(db.Model):
 
     def __repr__(self):
         return '<Post %r %r>' % (self.title, self.created)
-
 
 
 class AnonymousUser(AnonymousUserMixin):

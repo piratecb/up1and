@@ -1,14 +1,13 @@
-{% extends "base.html" %}
-{% from "_macros.html" import render_archive_pagination %}
+{% extends "kiko/base.html" %}
 
 {% block title %}UP1AND{% endblock %}
 
 {% block content %}
 <div class="content page">
-  <h1 class="page-title">Archive</h1>
+  <h1 class="page-title">{{ tag.name }}</h1>
   {% for post in posts %}
   <div class="archive-list-post">
-      <a href="{{ url_for('main.post', post_id=post.id) }}">
+      <a href="{{ url_for('main.post', id=post.id) }}">
         <span class="archive-list-post-title">
           {{ post.title }}
         </span>
@@ -18,6 +17,5 @@
       </a>
   </div>
   {% endfor %}
-  {{ render_archive_pagination(pagination, 'main.archive') }}
 </div>
 {% endblock %}

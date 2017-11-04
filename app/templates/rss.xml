@@ -7,7 +7,7 @@
   {% for post in posts %}
   <item>
     <title>{{ post.title }}</title>
-    <link>{{ url_for('main.post', post_id=post.id, _external=True) }}</link>
+    <link>{{ url_for('main.post', id=post.id, _external=True) }}</link>
     <pubDate>{{ post.created }}</pubDate>
     <description>
       {{ post.content|markdown|safe }}

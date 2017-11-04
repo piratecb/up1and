@@ -1,0 +1,63 @@
+{% macro render_field(field, id) %}
+        <div class="form-field">
+            {{ field.label(class='form-field-label') }}
+            {{ field(id=id, **kwargs) }}
+            {% if field.errors %}
+                <ul class="form-field-errors">
+                {% for error in field.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+                </ul> 
+            {% endif %}
+        </div>
+{% endmacro %}
+
+
+{% macro render_pagination(pagination, endpoint) %}
+<div class="list-pagination">
+    {% if pagination.has_prev %}
+        <span class="list-pagination-previous"><a href="{{ url_for(endpoint, page=pagination.prev_num, **kwargs) }}">&lt; previous</a></span>
+    {% endif %}
+    {% if pagination.has_next %}
+        <span class="list-pagination-next"><a href="{{ url_for(endpoint, page=pagination.next_num, **kwargs) }}">next &gt;</a></span>
+    {% endif %}
+</div>
+{% endmacro %}
+
+
+{% macro render_archive_pagination(pagination, endpoint) %}
+<div class="list-pagination">
+    {% if pagination.prev %}
+        <span class="list-pagination-previous"><a href="{{ url_for(endpoint, year=pagination.prev, **kwargs) }}">&lt; {{ pagination.prev }}</a></span>
+    {% endif %}
+    {% if pagination.next %}
+        <span class="list-pagination-next"><a href="{{ url_for(endpoint, year=pagination.next, **kwargs) }}">{{ pagination.next }} &gt;</a></span>
+    {% endif %}
+</div>
+{% endmacro %}
+
+{% macro render_manage_pagination(pagination, endpoint) %}
+<nav class="pagination">
+    <ul>
+        {% if pagination.has_prev %}
+            <li class="prev"><a href="{{ url_for(endpoint, page=pagination.prev_num, **kwargs) }}">&laquo;</a></li>
+        {% endif %}
+        {% for p in pagination.iter_pages() %}
+            {% if p %}
+            <li>
+                <ul>
+                    {% if p == pagination.page %}
+                    <li><span>{{ p }}</span></li>
+                    {% else %}
+                    <li><a href="{{ url_for(endpoint, page=p, **kwargs) }}">{{ p }}</a></li>
+                    {% endif %}
+                </ul>
+            </li>
+            {% endif %}
+        {% endfor %}
+        {% if pagination.has_next %}
+            <li class="next"><a href="{{ url_for(endpoint, page=pagination.next_num, **kwargs) }}">&raquo;</a></li>
+        {% endif %}
+    </ul>
+</nav>
+{% endmacro %}

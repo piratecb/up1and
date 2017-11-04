@@ -14,7 +14,7 @@ class LoginForm(FlaskForm):
 
 class SignupForm(FlaskForm):
     username = StringField('用户名', validators=[Required(), Length(1, 64), Regexp('^[A-Za-z][A-Za-z0-9_.]*$', 0, '用户名只能为字母、数字、下划线')])
-    nickname = StringField('昵称', validators=[Length(1, 64)])
+    nickname = StringField('昵称', validators=[Length(0, 64)])
     email = StringField('电子邮箱', validators=[Required(), Length(1, 64), Email()])
     password = PasswordField('密码', validators=[Required(), EqualTo('password_confirm', message='密码必须相等')])
     password_confirm = PasswordField('确认密码', validators=[Required()])
