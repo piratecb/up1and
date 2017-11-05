@@ -1,4 +1,4 @@
-from flask import current_app, jsonify, url_for
+from flask import current_app, request, jsonify, url_for
 from flask_restful import Resource, Api, reqparse, fields, marshal_with, abort
 
 from . import api
@@ -39,34 +39,39 @@ class PostListAPI(Resource):
         parser.add_argument('type', default='post', type=str)
         parser.add_argument('status', default=True, type=bool)
         parser.add_argument('limit', default=10, type=int)
-        parser.add_argument('offset', default=1, type=int)
+        parser.add_argument('page', default=1, type=int)
         parser.add_argument('type', default='post', type=str)
-        parser.add_argument('author', type=str)
-        parser.add_argument('meta', type=str)
         args = parser.parse_args()
         return args
 
     @marshal_with(post_fields)
-    def get(self):
+    def get(self, username=None, slug=None):
         args = self.req_parses()
         queryset = Post.query.filter_by(type=args.type, status=args.status).order_by(Post.created.desc())
-
-        if args.author:
-            pass
-
-        if args.meta:
-            pass
-
-        pagination = queryset.paginate(args.offset, per_page=args.limit, error_out=False)
-        posts = pagination.items
-
+        endpoint = 'api.posts'
+        params = request.args.copy()
+        params['limit'] = args.limit
         link = ''
-        link_template = '<{url}>;rel="{rel}";'
+
+        if username:
+            queryset = queryset.join(User).filter(User.username == username)
+            endpoint = 'api.posts_by_author'
+
+        if slug:
+            queryset = queryset.join(Post.metas).filter(Meta.slug == slug)
+            endpoint = 'api.posts_by_meta'
+
+        pagination = queryset.paginate(args.page, per_page=args.limit, error_out=False)
+        posts = pagination.items
+        
+        link_template = '<{url}>;rel="{rel}",'
         if pagination.has_prev:
-            url = url_for('api.posts', limit=args.limit, offset=pagination.prev_num, _external=True)
+            params['page'] = pagination.prev_num
+            url = url_for(endpoint, username=username, slug=slug, _external=True, **params)
             link += link_template.format(url=url, rel='prev')
         if pagination.has_next:
-            url = url_for('api.posts', limit=args.limit, offset=pagination.next_num, _external=True)
+            params['page'] = pagination.next_num
+            url = url_for(endpoint, username=username, slug=slug, _external=True, **params)
             link += link_template.format(url=url, rel='next')
 
         return posts, {'Link': link}
@@ -128,6 +133,8 @@ class MetaAPI(Resource):
 
 
 rest_api.add_resource(PostListAPI, '/posts', endpoint='posts')
+rest_api.add_resource(PostListAPI, '/posts/author/<path:username>', endpoint='posts_by_author')
+rest_api.add_resource(PostListAPI, '/posts/meta/<path:slug>', endpoint='posts_by_meta')
 rest_api.add_resource(PostAPI, '/post/<int:id>', endpoint='post')
 rest_api.add_resource(UserAPI, '/user/<path:username>', endpoint='user')
 rest_api.add_resource(MetaListAPI, '/metas', endpoint='metas')
