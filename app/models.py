@@ -4,6 +4,9 @@ import datetime
 from flask import current_app
 from flask_login import UserMixin, AnonymousUserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
+from itsdangerous import (TimedJSONWebSignatureSerializer
+                          as Serializer, BadSignature, SignatureExpired)
+
 from . import db, login_manager
 
 
@@ -61,6 +64,22 @@ class User(db.Model, UserMixin):
 
     def is_admin(self):
         return self.can('ADMINISTER')
+
+    def generate_token(self, expiration=600):
+        s = Serializer(current_app.config['SECRET_KEY'], expires_in=expiration)
+        return s.dumps({'id': self.id, 'username': self.username})
+
+    @staticmethod
+    def verify_token(token):
+        s = Serializer(current_app.config['SECRET_KEY'])
+        try:
+            data = s.loads(token)
+        except SignatureExpired:
+            return None    # valid token, but expired
+        except BadSignature:
+            return None    # invalid token
+        user = User.query.get(data['id'])
+        return user
 
 
 class Meta(db.Model):

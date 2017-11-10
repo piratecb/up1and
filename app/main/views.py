@@ -2,7 +2,7 @@ import datetime
 
 from itertools import groupby
 
-from flask import render_template, redirect, request, url_for, flash, current_app, abort
+from flask import render_template, redirect, request, g, url_for, flash, current_app, abort
 from flask_login import login_required, login_user, logout_user, current_user
 
 from . import main

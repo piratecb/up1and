@@ -1,6 +1,7 @@
 from functools import wraps
 from collections import OrderedDict
-from flask import abort
+
+from flask import abort, g
 from flask_login import current_user
 
 
@@ -8,7 +9,11 @@ def permission_required(permission):
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
-            if not current_user.can(permission):
+            try:
+                user = g.user
+            except AttributeError:
+                user = current_user
+            if not user.can(permission):
                 abort(403)
             return func(*args, **kwargs)
         return wrapper
