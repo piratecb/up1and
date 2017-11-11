@@ -2,7 +2,7 @@ import datetime
 
 from itertools import groupby
 
-from flask import render_template, redirect, request, g, url_for, flash, current_app, abort
+from flask import render_template, redirect, request, g, url_for, flash, current_app, abort, make_response
 from flask_login import login_required, login_user, logout_user, current_user
 
 from . import main
@@ -20,16 +20,16 @@ def index():
     posts = pagination.items
     return render_template(theme + 'index.html', posts=posts, pagination=pagination)
 
-@main.route('/post/<int:id>')
-def post(id):
-    post = Post.query.get_or_404(id)
+@main.route('/post/<int:pid>')
+def post(pid):
+    post = Post.query.get_or_404(pid)
     post.views += 1
     db.session.add(post)
     return render_template(theme + 'post.html', post=post)
 
-@main.route('/amp/post/<int:id>')
-def amp(id):
-    post = Post.query.get_or_404(id)
+@main.route('/amp/post/<int:pid>')
+def amp(pid):
+    post = Post.query.get_or_404(pid)
     return render_template(theme + 'amp.html', post=post)
 
 @main.route('/<path:slug>')
@@ -70,7 +70,9 @@ def login():
         user = User.query.filter_by(username=form.username.data).first()
         if user is not None and user.verify_password(form.password.data):
             login_user(user, form.remember_me.data)
-            return redirect(request.args.get('next') or url_for('main.index'))
+            response = make_response(redirect(request.args.get('next') or url_for('main.index')))
+            response.set_cookie('token', user.generate_token())
+            return response
         flash('用户名或密码错误')
     return render_template('account/login.html', form=form, title='Login')
 

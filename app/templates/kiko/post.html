@@ -3,7 +3,7 @@
 {% block title %}{{ post.title }} - UP1AND{% endblock %}
 
 {% block link %}
-    <link rel="amphtml" href="{{ url_for('main.amp', id=post.id, _external=True, _scheme='https') }}">
+    <link rel="amphtml" href="{{ url_for('main.amp', pid=post.id, _external=True, _scheme='https') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/prism.css') }}">
     <script src="{{ url_for('static', filename='js/prism.js') }}"></script>
 {% endblock %}

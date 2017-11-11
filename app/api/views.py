@@ -1,15 +1,16 @@
 from flask import current_app, request, g, jsonify, url_for
 from flask_restful import Resource, Api, reqparse, fields, marshal_with, abort
-from flask_httpauth import HTTPBasicAuth, HTTPTokenAuth, MultiAuth
+from flask_httpauth import HTTPBasicAuth, MultiAuth
 
 from . import api
 from .. import db
 from ..models import Post, User, Meta
+from ..utils import HTTPTokenAuthPlus, extend_attribute
 
 rest_api = Api(api)
 
 basic_auth = HTTPBasicAuth()
-token_auth = HTTPTokenAuth('Bearer')
+token_auth = HTTPTokenAuthPlus('Bearer')
 auth = MultiAuth(basic_auth, token_auth)
 
 @basic_auth.verify_password
@@ -32,14 +33,6 @@ def verify_token(token):
     return False
 
 
-def permission_required(permission):
-    if not g.user.can(permission):
-        abort(403)
-
-def admin_required():
-    return permission_required('ADMINISTER')
-
-
 user_fields = {
     'username': fields.String,
     'nickname': fields.String,
@@ -60,6 +53,7 @@ post_fields = {
     'content': fields.String,
     'created': fields.DateTime,
     'updated': fields.DateTime,
+    'status': fields.Boolean,
     'url': fields.Url('main.post', absolute=True),
     'author': fields.Nested(user_fields),
     'metas': fields.Nested(meta_fields),
@@ -70,8 +64,8 @@ class TokenAPI(Resource):
     method_decorators = [auth.login_required]
 
     def get(self):
-        token = g.user.generate_token(6000)
-        return jsonify({'token': token.decode('ascii'), 'duration': 6000, 'username': g.user.username})
+        token = g.user.generate_token(3600)
+        return jsonify({'token': token.decode('ascii'), 'duration': 3600, 'username': g.user.username})
 
 
 class PostListAPI(Resource):
@@ -81,7 +75,6 @@ class PostListAPI(Resource):
         self.parser.add_argument('status', default=True, type=bool)
         self.parser.add_argument('limit', default=10, type=int)
         self.parser.add_argument('page', default=1, type=int)
-        self.parser.add_argument('type', default='post', type=str)
         super(PostListAPI, self).__init__()
 
     @marshal_with(post_fields)
@@ -89,9 +82,6 @@ class PostListAPI(Resource):
         args = self.parser.parse_args()
         queryset = Post.query.filter_by(type=args.type, status=args.status).order_by(Post.created.desc())
         endpoint = 'api.posts'
-        params = request.args.copy()
-        params['limit'] = args.limit
-        link = ''
 
         if username:
             queryset = queryset.join(User).filter(User.username == username)
@@ -102,8 +92,11 @@ class PostListAPI(Resource):
             endpoint = 'api.posts_by_meta'
 
         pagination = queryset.paginate(args.page, per_page=args.limit, error_out=False)
-        posts = pagination.items
-        
+        posts = extend_attribute(pagination.items, 'pid', 'id')
+
+        params = request.args.copy()
+        params['limit'] = self.parser.parse_args().limit
+        link = ''
         link_template = '<{url}>;rel="{rel}",'
         if pagination.has_prev:
             params['page'] = pagination.prev_num
@@ -124,26 +117,48 @@ class PostAPI(Resource):
         self.parser.add_argument('slug', type=str)
         self.parser.add_argument('headline', type=str)
         self.parser.add_argument('content', type=str)
-        self.parser.add_argument('status', type=bool)
+        self.parser.add_argument('type', default='post', type=str)
+        self.parser.add_argument('status', default=True, type=bool)
         super(PostAPI, self).__init__()
 
     @marshal_with(post_fields)
-    def get(self, id):
-        post = Post.query.get(id)
+    def get(self, pid):
+        post = Post.query.get(pid)
+        post = extend_attribute(post, 'pid', 'id')
+
         if not post:
-            abort(404, message="Post {} doesn't exist".format(id))
+            abort(404, message="Post {} doesn't exist".format(pid))
+
+        if not post.status:
+            token_auth.login_with_token()
+            if not g.user.can('OPERATE'):
+                abort(403)
+
         return post
 
     @marshal_with(post_fields)
-    @token_auth.login_required
-    def put(self, id):
-        permission_required('POST')
-
+    @token_auth.permission_required('POST')
+    def post(self):
         args = self.parser.parse_args()
-        post = Post.query.get(id)
+
+        if args.type.lower() == 'page' and not g.user.can('PAGE'):
+            abort(403)
+
+        post = Post(title=args.title, headline=args.headline, content=args.content, status=args.status, author_id=g.user.id)
+        db.session.add(post)
+        db.session.commit()
+        post = extend_attribute(post, 'pid', 'id')
+        return post
+
+    @marshal_with(post_fields)
+    @token_auth.permission_required('POST')
+    def put(self, pid):
+        args = self.parser.parse_args()
+        post = Post.query.get(pid)
+        post = extend_attribute(post, 'pid', 'id')
 
         if not post:
-            abort(404, message="Post {} doesn't exist".format(id))
+            abort(404, message="Post {} doesn't exist".format(pid))
 
         for k, v in args.items():
             if v:
@@ -152,11 +167,9 @@ class PostAPI(Resource):
         db.session.commit()
         return post, 201
 
-    @token_auth.login_required
-    def delete(self, id):
-        permission_required('POST')
-
-        post = Post.query.get(id)
+    @token_auth.permission_required('POST')
+    def delete(self, pid):
+        post = Post.query.get(pid)
         if not post:
             abort(404, message="Post {} doesn't exist".format(pid))
 
@@ -188,7 +201,7 @@ class UserAPI(Resource):
         if not user:
             abort(404, message="User {} doesn't exist".format(id))
 
-        if user != request.user or not request.user.is_admin():
+        if user != g.user or not g.user.is_admin():
             abort(403)
 
         for k, v in args.items():
@@ -198,10 +211,8 @@ class UserAPI(Resource):
         db.session.commit()
         return post, 201
 
-    @token_auth.login_required
+    @token_auth.admin_required
     def delete(self, username):
-        admin_required()
-
         user = User.query.filter_by(username=username).first()
         if not user:
             abort(404, message="User {} doesn't exist".format(username))
@@ -209,7 +220,6 @@ class UserAPI(Resource):
         session.delete(user)
         session.commit()
         return {}, 204
-
 
 
 class MetaListAPI(Resource):
@@ -230,7 +240,8 @@ class MetaAPI(Resource):
 rest_api.add_resource(PostListAPI, '/posts', endpoint='posts')
 rest_api.add_resource(PostListAPI, '/posts/author/<path:username>', endpoint='posts_by_author')
 rest_api.add_resource(PostListAPI, '/posts/meta/<path:slug>', endpoint='posts_by_meta')
-rest_api.add_resource(PostAPI, '/posts/<int:id>', endpoint='post')
+rest_api.add_resource(PostAPI, '/posts/<int:pid>', endpoint='post', methods=['GET', 'PUT', 'DELETE'])
+rest_api.add_resource(PostAPI, '/posts', methods=['POST'])
 rest_api.add_resource(UserAPI, '/users/<path:username>', endpoint='user')
 rest_api.add_resource(MetaListAPI, '/metas', endpoint='metas')
 rest_api.add_resource(MetaAPI, '/metas/<path:slug>', endpoint='meta')

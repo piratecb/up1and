@@ -8,7 +8,7 @@
   <h1 class="page-title">Archive</h1>
   {% for post in posts %}
   <div class="archive-list-post">
-      <a href="{{ url_for('main.post', id=post.id) }}">
+      <a href="{{ url_for('main.post', pid=post.id) }}">
         <span class="archive-list-post-title">
           {{ post.title }}
         </span>

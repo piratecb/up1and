@@ -1,19 +1,17 @@
 from functools import wraps
 from collections import OrderedDict
 
-from flask import abort, g
+from flask import abort, request, g
 from flask_login import current_user
+from flask_httpauth import HTTPTokenAuth
+from werkzeug.datastructures import Authorization
 
 
 def permission_required(permission):
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
-            try:
-                user = g.user
-            except AttributeError:
-                user = current_user
-            if not user.can(permission):
+            if not current_user.can(permission):
                 abort(403)
             return func(*args, **kwargs)
         return wrapper
@@ -21,6 +19,55 @@ def permission_required(permission):
 
 def admin_required(func):
     return permission_required('ADMINISTER')(func)
+
+def extend_attribute(obj, new_attr, attr):
+    def _extend(item):
+        setattr(item, new_attr, getattr(item, attr))
+        return item
+
+    if isinstance(obj, list):
+        return list(map(_extend, obj))
+    else:
+        return _extend(obj)
+
+
+class HTTPTokenAuthPlus(HTTPTokenAuth):
+    def login_with_token(self):
+        auth = None
+        if 'Authorization' in request.headers:
+            try:
+                auth_type, token = request.headers['Authorization'].split(
+                    None, 1)
+                auth = Authorization(auth_type, {'token': token})
+            except ValueError:
+                # The Authorization header is either empty or has no token
+                pass
+
+        if auth is not None and auth.type.lower() != self.scheme.lower():
+            auth = None
+
+        if request.method != 'OPTIONS':  # pragma: no cover
+            password = None
+            print('authenticate', self.authenticate(auth, password))
+            if not self.authenticate(auth, password):
+                # Clear TCP receive buffer of any pending data
+                request.data
+                return self.auth_error_callback()
+
+    def permission_required(self, permission):
+        def decorator(func):
+            @wraps(func)
+            def wrapper(*args, **kwargs):
+                self.login_with_token()
+                user = getattr(g, 'user', None)
+                if user is None or not user.can(permission):
+                    abort(403)
+                return func(*args, **kwargs)
+            return wrapper
+        return decorator
+
+    def admin_required(self, func):
+        return self.permission_required('ADMINISTER')(func)
 
 
 class ArchiveDict(object):
