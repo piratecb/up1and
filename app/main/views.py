@@ -92,3 +92,7 @@ def logout():
     logout_user()
     flash('你已退出登陆')
     return redirect(url_for('main.index'))
+
+@main.route('/dashboard/')
+def dashboard():
+    return render_template('dashboard/index.html')
