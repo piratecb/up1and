@@ -1,12 +1,12 @@
 import React from 'react'
-
+import { Link } from 'react-router-dom'
 
 function MenuItem(props) {
   return (
-    <a href={props.value.url}>
+    <Link to={props.value.url}>
       <i className={'icon fa ' + props.value.icon} aria-hidden="true"></i>
       <span>{props.value.name}</span>
-    </a>
+    </Link>
   )
 }
 
@@ -70,13 +70,13 @@ class Sidebar extends React.Component {
     super(props)
     this.state = {collapse: this.getCollapse()}
     this.primaryMenus = [
-      {icon: 'ion-ios-home-outline', url: '#/home', name: 'Home'},
-      {icon: 'ion-ios-list-outline', url: '#/home', name: 'Posts'},
-      {icon: 'ion-ios-pricetag-outline', url: '#/home', name: 'Tags'},
-      {icon: 'ion-ios-paper-outline', url: '#/home', name: 'Pages'}
+      {icon: 'ion-ios-home-outline', url: '/dashboard', name: 'Home'},
+      {icon: 'ion-ios-list-outline', url: '/dashboard/posts', name: 'Posts'},
+      {icon: 'ion-ios-pricetag-outline', url: '/dashboard/metas', name: 'Metas'},
+      {icon: 'ion-ios-paper-outline', url: '/dashboard/pages', name: 'Pages'}
     ]
     this.settingMenus = [
-      {icon: 'ion-ios-settings', url: '#/home', name: 'Settings'},
+      {icon: 'ion-ios-settings', url: '/dashboard/settings', name: 'Settings'},
       {icon: 'ion-log-out', url: '/logout', name: 'Logout'}
     ]
     this.clickCollapse = this.clickCollapse.bind(this)

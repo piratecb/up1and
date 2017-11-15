@@ -5,7 +5,7 @@ const BUILD_DIR = path.resolve(__dirname, 'app/static/js')
 const APP_DIR = path.resolve(__dirname, 'app/dashboard')
 
 const config = {
-  entry: APP_DIR + '/app.jsx',
+  entry: APP_DIR + '/index.js',
   output: {
     path: BUILD_DIR,
     filename: 'dashboard.js'
@@ -13,13 +13,9 @@ const config = {
   module : {
     loaders : [
       {
-        test : /\.jsx?/,
+        test : /\.js?/,
         include : APP_DIR,
-        loader : 'babel-loader',
-        options: {
-        plugins: [
-          ['import', { libraryName: "antd", style: true }]
-        ]
+        loader : 'babel-loader'
       }
     ]
   }

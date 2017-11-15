@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Main, Section, Button, Post} from '../components/Common.jsx'
+import { Main, Section, Button, Post} from '../components/Common'
 
 class Posts extends React.Component {
 
