@@ -15,6 +15,24 @@ a {
     transition: color .2s ease;
 }
 
+a:active, a:hover {
+    outline: 0;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #57a3f3;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+strong {
+    color: #1c2438;
+}
+
 #app,
 .layout,
 body,
@@ -244,10 +262,12 @@ html {
 }
 
 .post-item+.post-item {
-    border-top: 1px solid rgba(0,0,0,.04);
+    border-top: 1px solid rgba(0, 0, 0, .04);
 }
 
-.post-item-link, .post-item-link span, .post-item-link strong {
+.post-item-link,
+.post-item-link span,
+.post-item-link strong {
     display: block;
 }
 
@@ -269,19 +289,31 @@ html {
 .post-item-views {
     white-space: nowrap;
     padding: 0 15px;
-    color: rgba(0,0,0,.24);
+    color: rgba(0, 0, 0, .24);
 }
 
-.post-item-views strong{
+.post-item-views strong {
     font-size: 24px;
-    color: rgba(0,0,0,.62);
+    color: rgba(0, 0, 0, .62);
 }
 
-.post-item-info a+span:before, .post-item-info span:after {
+.post-item-info a+span:before,
+.post-item-info span:after {
     content: "/";
     margin: 0 6px;
 }
 
-h1, h2, h3, h4, h5, strong {
-    color: #1c2438;
+/*.post-item-info a {
+    color: #80848f;
+    text-decoration: underline;
+}*/
+
+
+@media (max-width: 840px) {
+    .main .container {
+        padding: 20px 15px;
+    }
+    .section {
+        padding: 20px 0;
+    }
 }

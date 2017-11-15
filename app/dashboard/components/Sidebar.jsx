@@ -68,7 +68,7 @@ class Bottom extends React.Component {
 class Sidebar extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {collapse: false}
+    this.state = {collapse: this.getCollapse()}
     this.primaryMenus = [
       {icon: 'ion-ios-home-outline', url: '#/home', name: 'Home'},
       {icon: 'ion-ios-list-outline', url: '#/home', name: 'Posts'},
@@ -79,11 +79,28 @@ class Sidebar extends React.Component {
       {icon: 'ion-ios-settings', url: '#/home', name: 'Settings'},
       {icon: 'ion-log-out', url: '/logout', name: 'Logout'}
     ]
-    this.collapseChange = this.collapseChange.bind(this)
+    this.clickCollapse = this.clickCollapse.bind(this)
+    this.updateCollapse = this.updateCollapse.bind(this)
   }
 
-  collapseChange() {
+  getCollapse() {
+    return window.innerWidth < 768 ? true : false
+  }
+
+  clickCollapse() {
     this.setState({collapse: !this.state.collapse})
+  }
+
+  updateCollapse() {
+    this.setState({collapse: this.getCollapse()})
+  }
+
+  componentDidMount() {
+      window.addEventListener('resize', this.updateCollapse)
+  }
+
+  componentWillUnmount() {
+      window.removeEventListener('resize', this.updateCollapse)
   }
 
   render() {
@@ -97,7 +114,7 @@ class Sidebar extends React.Component {
         </div>
         <Bottom 
           collapse={this.state.collapse}
-          callback={this.collapseChange}
+          callback={this.clickCollapse}
         />
       </aside>
     )
