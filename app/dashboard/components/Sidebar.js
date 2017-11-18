@@ -70,13 +70,13 @@ class Sidebar extends React.Component {
     super(props)
     this.state = {collapse: this.getCollapse()}
     this.primaryMenus = [
-      {icon: 'ion-ios-home-outline', url: '/dashboard', name: 'Home'},
-      {icon: 'ion-ios-list-outline', url: '/dashboard/posts', name: 'Posts'},
-      {icon: 'ion-ios-pricetag-outline', url: '/dashboard/metas', name: 'Metas'},
-      {icon: 'ion-ios-paper-outline', url: '/dashboard/pages', name: 'Pages'}
+      {icon: 'ion-ios-home-outline', url: '/', name: 'Home'},
+      {icon: 'ion-ios-list-outline', url: '/posts', name: 'Posts'},
+      {icon: 'ion-ios-pricetag-outline', url: '/metas', name: 'Metas'},
+      {icon: 'ion-ios-paper-outline', url: '/pages', name: 'Pages'}
     ]
     this.settingMenus = [
-      {icon: 'ion-ios-settings', url: '/dashboard/settings', name: 'Settings'},
+      {icon: 'ion-ios-settings', url: '/settings', name: 'Settings'},
       {icon: 'ion-log-out', url: '/logout', name: 'Logout'}
     ]
     this.clickCollapse = this.clickCollapse.bind(this)

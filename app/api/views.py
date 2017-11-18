@@ -4,7 +4,7 @@ from flask_httpauth import HTTPBasicAuth, MultiAuth
 
 from . import api
 from .. import db
-from ..models import Post, User, Meta
+from ..models import Post, User, Meta, AnonymousUser
 from ..utils import HTTPTokenAuthPlus, extend_attribute
 
 rest_api = Api(api)
@@ -17,6 +17,7 @@ auth = MultiAuth(basic_auth, token_auth)
 def verify_password(username, password):
     user = User.query.filter_by(username=username).first()
     if not user or not user.verify_password(password):
+        g.user = AnonymousUser()
         return False
     g.user = user
     return True
@@ -30,6 +31,8 @@ def verify_token(token):
     if user:
         g.user = user
         return True
+    else:
+        g.user = AnonymousUser()
     return False
 
 
@@ -57,6 +60,7 @@ post_fields = {
     'url': fields.Url('main.post', absolute=True),
     'author': fields.Nested(user_fields),
     'metas': fields.Nested(meta_fields),
+    'views': fields.Integer
 }
 
 
@@ -64,7 +68,7 @@ class TokenAPI(Resource):
     method_decorators = [auth.login_required]
 
     def get(self):
-        token = g.user.generate_token(3600)
+        token = g.user.generate_token()
         return jsonify({'token': token.decode('ascii'), 'duration': 3600, 'username': g.user.username})
 
 
@@ -72,7 +76,7 @@ class PostListAPI(Resource):
     def __init__(self):
         self.parser = reqparse.RequestParser()
         self.parser.add_argument('type', default='post', type=str)
-        self.parser.add_argument('status', default=True, type=bool)
+        self.parser.add_argument('draft', default=False, type=bool)
         self.parser.add_argument('limit', default=10, type=int)
         self.parser.add_argument('page', default=1, type=int)
         super(PostListAPI, self).__init__()
@@ -80,7 +84,14 @@ class PostListAPI(Resource):
     @marshal_with(post_fields)
     def get(self, username=None, slug=None):
         args = self.parser.parse_args()
-        queryset = Post.query.filter_by(type=args.type, status=args.status).order_by(Post.created.desc())
+        status = not args.draft
+
+        if not status:
+            token_auth.login_with_token()
+            if not g.user.can('POST'):
+                abort(403)
+
+        queryset = Post.query.filter_by(type=args.type, status=not args.draft).order_by(Post.created.desc())
         endpoint = 'api.posts'
 
         if username:

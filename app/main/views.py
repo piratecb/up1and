@@ -94,5 +94,6 @@ def logout():
     return redirect(url_for('main.index'))
 
 @main.route('/dashboard/')
+@login_required
 def dashboard():
     return render_template('dashboard/index.html')

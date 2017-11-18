@@ -59,8 +59,7 @@ class HTTPTokenAuthPlus(HTTPTokenAuth):
             @wraps(func)
             def wrapper(*args, **kwargs):
                 self.login_with_token()
-                user = getattr(g, 'user', None)
-                if user is None or not user.can(permission):
+                if not g.user.can(permission):
                     abort(403)
                 return func(*args, **kwargs)
             return wrapper

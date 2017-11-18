@@ -1,4 +1,7 @@
 import React from 'react'
+import moment from 'moment'
+
+import * as api from '../api.js'
 
 
 function Section(props) {
@@ -45,11 +48,13 @@ function PostItem(props) {
     return (
       <div className="post-item two-column">
         <div className="two-column-main">
-          <a href={props.value.url} className="post-item-link">
-            <strong>{props.value.title}</strong>
+          <a href={props.post.url} className="post-item-link">
+            <strong>{props.post.title}</strong>
           </a>
           <div className="post-item-info">
-            <span>{props.value.meta}</span>
+            {props.post.metas.map((meta) =>
+              <span key={meta.slug}>{meta.name}</span>
+            )}
           </div>
         </div>
       </div>
@@ -58,18 +63,20 @@ function PostItem(props) {
     return (
       <div className="post-item two-column">
         <div className="two-column-main">
-          <a href={props.value.url} className="post-item-link">
-            <strong>{props.value.title}</strong>
-            <span>{props.value.headline}</span>
+          <a href={props.post.url} className="post-item-link">
+            <strong>{props.post.title}</strong>
+            <span>{props.post.headline}</span>
           </a>
           <div className="post-item-info">
-            <span>{props.value.meta}</span>
-            <a href="">{props.value.created}</a>
+            {props.post.metas.map((meta) =>
+              <span key={meta.slug}>{meta.name}</span>
+            )}
+            <a href="">{moment(props.post.created).format('ll')}</a>
           </div>
         </div>
         <div className="two-column-action">
           <div className="post-item-views">
-            <strong>2</strong> views
+            <strong>{props.post.views}</strong> views
           </div>
         </div>
       </div>
@@ -78,16 +85,41 @@ function PostItem(props) {
 
 }
 
-function Post(props) {
-  return (
-    <div className="content">
-      {props.items.map((item) =>
-        <PostItem key={item.title}
-                  value={item} 
-                  type={props.type} />
-      )}
-    </div>
-  )
+
+class Post extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      posts: [],
+      next: {},
+      prev: {},
+    }
+  }
+
+  componentDidMount() {
+    const func = this.props.type === 'draft' ? api.fetchDrafts : api.fetchPosts
+    func().then((posts) => {
+        let link = api.parseLink(posts.headers.link)
+        this.setState({
+          posts: posts.data,
+          next: link.next || {},
+          prev: link.prev || {},
+        })
+      })
+  }
+
+  render() {
+    return (
+      <div className="content">
+        {this.state.posts.map((post) =>
+          <PostItem key={post.id}
+                    post={post} 
+                    type={this.props.type} />
+        )}
+      </div>
+    )
+  }
+
 }
 
 export {
