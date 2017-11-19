@@ -8,9 +8,9 @@ class Posts extends React.Component {
     return (
       <Main>
           <Section 
-            title="Drafts" 
+            title='Drafts' 
             action={
-              <Button text="New Post"/>
+              <Button text='New Post' url='/post-draft'/>
             }>
             <Post type='draft' />
           </Section>

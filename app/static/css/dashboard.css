@@ -308,6 +308,114 @@ html {
     text-decoration: underline;
 }*/
 
+.writer-head {
+    padding: 10px 20px;
+    border-bottom: 1px solid #e9eaec;
+}
+
+.writer-head-content {
+    text-align: right;
+}
+
+.btn {
+    display: inline-block;
+    margin-bottom: 0;
+    font-weight: 400;
+    text-align: center;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    background-image: none;
+    border: 1px solid transparent;
+    white-space: nowrap;
+    line-height: 1.5;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    padding: 6px 15px;
+    font-size: 12px;
+    border-radius: 4px;
+    -webkit-transition: color .2s linear,background-color .2s linear,border .2s linear;
+    transition: color .2s linear,background-color .2s linear,border .2s linear;
+    color: #495060;
+    background-color: #f7f7f7;
+    border-color: #dddee1;
+}
+
+.btn, .btn:active, .btn:focus {
+    outline: 0;
+}
+
+.btn-ghost {
+    color: #495060;
+    background-color: transparent;
+    border-color: #dddee1;
+}
+
+.btn-ghost:hover {
+    color: #57a3f3;
+    background-color: transparent;
+    border-color: #57a3f3;
+}
+
+.btn-text {
+    color: #495060;
+    background-color: transparent;
+    border-color: transparent;
+}
+
+.btn-text:hover {
+    color: #57a3f3;
+    background-color: transparent;
+    border-color: transparent;
+}
+
+.btn-icon-only {
+    padding: 6px 8px;
+    font-size: 14px;
+}
+
+.writer-main {
+    padding: 20px 20px;
+}
+
+.writer-main .post-field input {
+    border: 0;
+    outline: 0;
+    width: 100%;
+}
+
+.writer-main .title {
+    font-weight: 600;
+    font-size: 24px;
+    font-family: inherit;
+    color: rgba(0,0,0,.98);
+    margin-bottom: 6px;
+}
+
+.writer-main .headline {
+    font-size: 20px;
+    font-weight: 300;
+    color: rgba(0,0,0,.42);
+    margin-bottom: 16px;
+}
+
+.writer-main .markdown-area {
+    display: block;
+    min-height: 200px;
+    font-size: 16px;
+    font-family: inherit;
+    line-height: 22px;
+    overflow-x: hidden;
+    resize: none;
+    border: none;
+    outline: none;
+    width: 100%;
+    padding: 0;
+    background-color: transparent;
+}
 
 @media (max-width: 840px) {
     .main .container {

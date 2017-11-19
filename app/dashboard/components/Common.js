@@ -1,7 +1,9 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
+
 import moment from 'moment'
 
-import * as api from '../api.js'
+import * as api from '../api'
 
 
 function Section(props) {
@@ -35,54 +37,11 @@ function Button(props) {
   const url = props.url || '#'
   const text = props.text || 'Button'
   return (
-    <a href={url}>
+    <Link to={url}>
     <button type="button" className="pure-button pure-button-primary">
     <span>{text}</span></button>
-    </a>
+    </Link>
   )
-}
-
-function PostItem(props) {
-  const type = props.type === 'draft' ? 'draft' : 'post'
-  if (props.type === 'draft') {
-    return (
-      <div className="post-item two-column">
-        <div className="two-column-main">
-          <a href={props.post.url} className="post-item-link">
-            <strong>{props.post.title}</strong>
-          </a>
-          <div className="post-item-info">
-            {props.post.metas.map((meta) =>
-              <span key={meta.slug}>{meta.name}</span>
-            )}
-          </div>
-        </div>
-      </div>
-    )
-  } else {
-    return (
-      <div className="post-item two-column">
-        <div className="two-column-main">
-          <a href={props.post.url} className="post-item-link">
-            <strong>{props.post.title}</strong>
-            <span>{props.post.headline}</span>
-          </a>
-          <div className="post-item-info">
-            {props.post.metas.map((meta) =>
-              <span key={meta.slug}>{meta.name}</span>
-            )}
-            <a href="">{moment(props.post.created).format('ll')}</a>
-          </div>
-        </div>
-        <div className="two-column-action">
-          <div className="post-item-views">
-            <strong>{props.post.views}</strong> views
-          </div>
-        </div>
-      </div>
-    )
-  }
-
 }
 
 
@@ -94,11 +53,16 @@ class Post extends React.Component {
       next: {},
       prev: {},
     }
+    this.updateApi = this.props.type === 'draft' ? api.fetchDrafts : api.fetchPosts
+    this.renderItem = this.props.type === 'draft' ? this.draftItem : this.postItem
   }
 
   componentDidMount() {
-    const func = this.props.type === 'draft' ? api.fetchDrafts : api.fetchPosts
-    func().then((posts) => {
+    this.updatePosts()
+  }
+
+  updatePosts() {
+    this.updateApi().then((posts) => {
         let link = api.parseLink(posts.headers.link)
         this.setState({
           posts: posts.data,
@@ -108,13 +72,52 @@ class Post extends React.Component {
       })
   }
 
+  postItem(post) {
+    return (
+      <div key={post.id} className="post-item two-column">
+        <div className="two-column-main">
+          <a href={post.url} className="post-item-link">
+            <strong>{post.title}</strong>
+            <span>{post.headline}</span>
+          </a>
+          <div className="post-item-info">
+            {post.metas.map((meta) =>
+              <span key={meta.slug}>{meta.name}</span>
+            )}
+            <a href="">{moment(post.created).format('ll')}</a>
+          </div>
+        </div>
+        <div className="two-column-action">
+          <div className="post-item-views">
+            <strong>{post.views}</strong> views
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  draftItem(post) {
+    return (
+      <div key={post.id} className="post-item two-column">
+        <div className="two-column-main">
+          <a href={post.url} className="post-item-link">
+            <strong>{post.title}</strong>
+          </a>
+          <div className="post-item-info">
+            {post.metas.map((meta) =>
+              <span key={meta.slug}>{meta.name}</span>
+            )}
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   render() {
     return (
       <div className="content">
         {this.state.posts.map((post) =>
-          <PostItem key={post.id}
-                    post={post} 
-                    type={this.props.type} />
+          this.renderItem(post)
         )}
       </div>
     )

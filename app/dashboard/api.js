@@ -53,9 +53,14 @@ function fetchDrafts() {
   return request.get('posts?draft=true')
 }
 
+function createPost(data) {
+  return request.post('posts', data)
+}
+
 export {
   fetchPosts,
   fetchDrafts,
+  createPost,
   token,
   parseLink,
 }
