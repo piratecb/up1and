@@ -1,8 +1,11 @@
+import os
 import hashlib
 import mistune
-from flask import Flask, url_for
+
+from flask import Flask, url_for, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+
 from config import config
 
 db = SQLAlchemy()
@@ -29,22 +32,29 @@ def create_app(config_name):
     from .api import api as api_blueprint
     app.register_blueprint(api_blueprint, url_prefix='/api')
 
-    @app.context_processor
-    def override_url_for():
-        return dict(url_for=dated_url_for)
-
-    def dated_url_for(endpoint, **values):
-        import os
-        if endpoint == 'static':
-            filename = values.get('filename', None)
-            if filename:
-                file_path = os.path.join(app.root_path, endpoint, filename)
-                values['v'] = int(os.stat(file_path).st_mtime)
-        return url_for(endpoint, **values)
-
     @app.template_filter('strftime')
     def format_datatime(value, format='%b %d, %Y'):
         return value.strftime(format)
+
+    @app.url_defaults
+    def hashed_static_url(endpoint, values):
+        if 'static' == endpoint or endpoint.endswith('.static'):
+            filename = values.get('filename')
+            if filename:
+                blueprint = request.blueprint
+                if '.' in endpoint:  # blueprint
+                    blueprint = endpoint.rsplit('.', 1)[0]
+
+                static_folder = app.static_folder
+                
+                # use blueprint, but dont set `static_folder` option
+                if blueprint and app.blueprints[blueprint].static_folder:
+                    static_folder = app.blueprints[blueprint].static_folder
+
+                fp = os.path.join(static_folder, filename)
+                if os.path.exists(fp):
+                    with open(fp, 'rb') as f:
+                        values['v'] = hashlib.md5(f.read()).hexdigest()[0:8]
 
     @app.template_filter('markdown')
     def render_markdown(content):

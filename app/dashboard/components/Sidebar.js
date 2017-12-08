@@ -1,12 +1,13 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
+
 
 function MenuItem(props) {
   return (
-    <Link to={props.value.url}>
+    <NavLink exact to={props.value.url} activeClassName="active">
       <i className={'icon fa ' + props.value.icon} aria-hidden="true"></i>
       <span>{props.value.name}</span>
-    </Link>
+    </NavLink>
   )
 }
 

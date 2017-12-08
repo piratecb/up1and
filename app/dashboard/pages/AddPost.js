@@ -12,6 +12,7 @@ class PostHeader extends React.Component {
     return (
       <div className='writer-head'>
         <div className='writer-head-content'>
+          <Button type='ghost'>Publish</Button>
           <button type="button" className="btn btn-text btn-icon-only">
             <i className="icon ion-help-circled"></i>
           </button>
@@ -66,9 +67,6 @@ class Writer extends React.Component {
           <div className="post-field content">
             <textarea placeholder="Content" type="text" className='markdown-area' ref="content" />
           </div>
-          <button type="submit" className="pure-button pure-button-primary">
-            <span>Publish</span>
-          </button>
         </form>
         {this.state.redirect && (
           <Redirect to='/posts'/>

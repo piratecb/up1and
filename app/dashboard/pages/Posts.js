@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 import { Main, Section, Button, Post} from '../components/Common'
 
@@ -10,7 +11,7 @@ class Posts extends React.Component {
           <Section 
             title='Drafts' 
             action={
-              <Button text='New Post' url='/post-draft'/>
+              <Link to='/post-draft'><Button type='primary'>New Post</Button></Link>
             }>
             <Post type='draft' />
           </Section>

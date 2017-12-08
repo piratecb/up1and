@@ -1,5 +1,4 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 
 import moment from 'moment'
 
@@ -34,13 +33,9 @@ function Main(props) {
 }
 
 function Button(props) {
-  const url = props.url || '#'
-  const text = props.text || 'Button'
   return (
-    <Link to={url}>
-    <button type="button" className="pure-button pure-button-primary">
-    <span>{text}</span></button>
-    </Link>
+    <button type="button" className={'btn btn-' + props.type}>
+    <span>{props.children}</span></button>
   )
 }
 
