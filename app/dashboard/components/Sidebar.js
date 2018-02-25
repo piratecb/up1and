@@ -1,5 +1,6 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
+import { inject, observer } from 'mobx-react'
 
 
 function MenuItem(props) {
@@ -38,38 +39,35 @@ function Logo(props) {
   )
 }
 
+
+@inject(stores => ({
+    menu: stores.menu
+}))
+@observer
 class Bottom extends React.Component {
   constructor(props) {
     super(props)
-    this.handleClick = this.handleClick.bind(this)
-  }
-
-  handleClick() {
-    this.props.callback()
   }
 
   render() {
-    const collapse = this.props.collapse
-    if (collapse) {
-      return (
-        <div className="bottom" onClick={this.handleClick}>
-          <i className="icon ion-chevron-right"></i>
-        </div>
-      )
-    } else {
-      return (
-        <div className="bottom" onClick={this.handleClick}>
-          <i className="icon ion-chevron-left"></i>
-        </div>
-      )
-    }
+    let menu = this.props.menu
+    let icon = menu.collapse ? 'icon ion-chevron-right' : 'icon ion-chevron-left'
+    return (
+      <div className="bottom" onClick={menu.toggle}>
+        <i className={icon}></i>
+      </div>
+    )
   }
 }
 
+
+@inject(stores => ({
+    menu: stores.menu
+}))
+@observer
 class Sidebar extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {collapse: this.getCollapse()}
     this.primaryMenus = [
       {icon: 'ion-ios-home-outline', url: '/', name: 'Home'},
       {icon: 'ion-ios-list-outline', url: '/posts', name: 'Posts'},
@@ -80,43 +78,26 @@ class Sidebar extends React.Component {
       {icon: 'ion-ios-settings', url: '/settings', name: 'Settings'},
       {icon: 'ion-log-out', url: '/logout', name: 'Logout'}
     ]
-    this.clickCollapse = this.clickCollapse.bind(this)
-    this.updateCollapse = this.updateCollapse.bind(this)
-  }
-
-  getCollapse() {
-    return window.innerWidth < 768 ? true : false
-  }
-
-  clickCollapse() {
-    this.setState({collapse: !this.state.collapse})
-  }
-
-  updateCollapse() {
-    this.setState({collapse: this.getCollapse()})
   }
 
   componentDidMount() {
-      window.addEventListener('resize', this.updateCollapse)
+      window.addEventListener('resize', this.props.menu.updateCollapse)
   }
 
   componentWillUnmount() {
-      window.removeEventListener('resize', this.updateCollapse)
+      window.removeEventListener('resize', this.props.menu.updateCollapse)
   }
 
   render() {
-    const collapseStyle = this.state.collapse ? 'side collapse' : 'side'
+    const style = this.props.menu.collapse ? 'side collapse' : 'side'
     return (
-      <aside className={collapseStyle}>
+      <aside className={style}>
         <Logo />
         <div className="navgation">
           <Menu items={this.primaryMenus} />
           <Menu items={this.settingMenus} />
         </div>
-        <Bottom 
-          collapse={this.state.collapse}
-          callback={this.clickCollapse}
-        />
+        <Bottom/>
       </aside>
     )
   }
