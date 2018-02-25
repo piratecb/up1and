@@ -1,6 +1,7 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 import { inject, observer } from 'mobx-react'
+import classNames from 'classnames'
 
 
 function MenuItem(props) {
@@ -51,10 +52,10 @@ class Bottom extends React.Component {
 
   render() {
     let menu = this.props.menu
-    let icon = menu.collapse ? 'icon ion-chevron-right' : 'icon ion-chevron-left'
+    let iconClass = classNames('icon', {'ion-chevron-right': menu.collapse, 'ion-chevron-left': !menu.collapse})
     return (
       <div className="bottom" onClick={menu.toggle}>
-        <i className={icon}></i>
+        <i className={iconClass}></i>
       </div>
     )
   }
@@ -80,18 +81,10 @@ class Sidebar extends React.Component {
     ]
   }
 
-  componentDidMount() {
-      window.addEventListener('resize', this.props.menu.updateCollapse)
-  }
-
-  componentWillUnmount() {
-      window.removeEventListener('resize', this.props.menu.updateCollapse)
-  }
-
   render() {
-    const style = this.props.menu.collapse ? 'side collapse' : 'side'
+    const asideClass = classNames('side', { 'collapse': this.props.menu.collapse })
     return (
-      <aside className={style}>
+      <aside className={asideClass}>
         <Logo />
         <div className="navgation">
           <Menu items={this.primaryMenus} />

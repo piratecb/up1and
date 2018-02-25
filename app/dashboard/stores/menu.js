@@ -4,7 +4,7 @@ class Menu {
     @observable collapse
 
     constructor() {
-    	this.updateCollapse()
+    	this.update()
     }
 
     @action.bound
@@ -13,7 +13,7 @@ class Menu {
     }
 
     @action.bound
-    updateCollapse() {
+    update() {
     	this.collapse = window.innerWidth < 768 ? true : false
     }
 }

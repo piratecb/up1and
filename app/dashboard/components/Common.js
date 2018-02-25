@@ -1,8 +1,7 @@
 import React from 'react'
+import { inject, observer } from 'mobx-react'
 
 import moment from 'moment'
-
-import * as api from '../api'
 
 
 function Section(props) {
@@ -40,6 +39,10 @@ function Button(props) {
 }
 
 
+@inject(stores => ({
+    post: stores.post
+}))
+@observer
 class Post extends React.Component {
   constructor(props) {
     super(props)
@@ -48,24 +51,24 @@ class Post extends React.Component {
       next: {},
       prev: {},
     }
-    this.updateApi = this.props.type === 'draft' ? api.fetchDrafts : api.fetchPosts
+
     this.renderItem = this.props.type === 'draft' ? this.draftItem : this.postItem
   }
 
   componentDidMount() {
-    this.updatePosts()
+    this.props.post.fetch()
   }
 
-  updatePosts() {
-    this.updateApi().then((posts) => {
-        let link = api.parseLink(posts.headers.link)
-        this.setState({
-          posts: posts.data,
-          next: link.next || {},
-          prev: link.prev || {},
-        })
-      })
-  }
+  // updatePosts() {
+  //   this.updateApi().then((posts) => {
+  //       let link = api.parseLink(posts.headers.link)
+  //       this.setState({
+  //         posts: posts.data,
+  //         next: link.next || {},
+  //         prev: link.prev || {},
+  //       })
+  //     })
+  // }
 
   postItem(post) {
     return (
@@ -111,7 +114,7 @@ class Post extends React.Component {
   render() {
     return (
       <div className="content">
-        {this.state.posts.map((post) =>
+        {this.props.post.posts.map((post) =>
           this.renderItem(post)
         )}
       </div>

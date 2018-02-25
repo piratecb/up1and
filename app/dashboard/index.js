@@ -10,18 +10,32 @@ import AddPost from './pages/AddPost'
 
 import stores from './stores'
 
-render((
-  <Provider {...stores}>
-    <Router>
-      <div className="layout">
-        <Sidebar />
-        <Route exact path="/" component={Home}/>
-        <Route path="/posts" component={Posts}/>
-        <Route path="/post-draft" component={AddPost}/>
-      </div>
-    </Router>
-  </Provider>
-), document.getElementById('app'))
 
+class App extends React.Component {
+  componentDidMount() {
+      window.addEventListener('resize', stores.menu.update)
+  }
+
+  componentWillUnmount() {
+      window.removeEventListener('resize', stores.menu.update)
+  }
+
+  render() {
+    return (
+      <Provider {...stores}>
+        <Router>
+          <div className="layout">
+            <Sidebar />
+            <Route exact path="/" component={Home}/>
+            <Route path="/posts" component={Posts}/>
+            <Route path="/post-draft" component={AddPost}/>
+          </div>
+        </Router>
+      </Provider>
+    );
+  }
+}
+
+render(<App />, document.getElementById('app'))
 
 window.stores = stores
