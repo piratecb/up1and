@@ -7,10 +7,10 @@ function getCookie(name) {
 }
 
 const token = getCookie('token')
-const req = axios.create({
+const agent = axios.create({
   baseURL: '/api/',
   timeout: 1000,
   headers: {'Authorization': 'Bearer ' + token}
 })
 
-export default req
+export default agent

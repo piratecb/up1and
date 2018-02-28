@@ -1,10 +1,10 @@
 import { observable, action } from 'mobx'
 
-class Menu {
+class AsideStore {
     @observable collapse
 
     constructor() {
-    	this.update()
+        this.update()
     }
 
     @action.bound
@@ -14,9 +14,8 @@ class Menu {
 
     @action.bound
     update() {
-    	this.collapse = window.innerWidth < 768 ? true : false
+        this.collapse = window.innerWidth < 768 ? true : false
     }
 }
 
-const menu = new Menu()
-export default menu
+export default new AsideStore()

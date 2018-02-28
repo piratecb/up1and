@@ -1,7 +1,7 @@
 import { observable, action } from 'mobx'
 import axios from 'axios'
 
-import req from '../utils'
+import agent from '../agent'
 
 class PostStore {
     @observable posts = []
@@ -15,7 +15,7 @@ class PostStore {
 
         // posts?draft=true
 
-        req.get('posts').then(
+        agent.get('posts').then(
             action('success', posts => {
                 this.posts = posts.data
                 this.state = 'done'
@@ -28,5 +28,4 @@ class PostStore {
     }
 }
 
-const post = new PostStore()
-export default post
+export default new PostStore()
