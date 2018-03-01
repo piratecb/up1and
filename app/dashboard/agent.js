@@ -36,7 +36,7 @@ const Posts = {
   get: id =>
     requests.get(`/posts/${id}`),
   update: (id, data) =>
-    requests.put(`/posts/${post.id}`, data),
+    requests.put(`/posts/${id}`, data),
   create: (data) =>
     requests.post('/posts', data)
 }

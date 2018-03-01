@@ -68,7 +68,7 @@ class TokenAPI(Resource):
     method_decorators = [auth.login_required]
 
     def get(self):
-        token = g.user.generate_token()
+        token = g.user.generate_token(3600)
         return jsonify({'token': token.decode('ascii'), 'duration': 3600, 'username': g.user.username})
 
 

@@ -47,8 +47,8 @@ class PostStore {
   @action
   get(id, acceptCached=false) {
     if (acceptCached) {
-      const article = this.getArticle(slug);
-      if (article) return Promise.resolve(article);
+      const post = this.find(id)
+      if (post) return Promise.resolve(post)
     }
     return agent.Posts.get(id).then(
       action('get', res => {

@@ -11,9 +11,9 @@ function DraftPreview(post) {
   return (
     <div key={post.id} className="post-item two-column">
       <div className="two-column-main">
-        <a href={post.url} className="post-item-link">
+        <Link className="post-item-link" to={`/editor/${post.id}`}>
           <strong>{post.title}</strong>
-        </a>
+        </Link>
         <div className="post-item-info">
           {post.metas.map((meta) =>
             <span key={meta.slug}>{meta.name}</span>
@@ -29,15 +29,15 @@ function PostPreview(post) {
   return (
     <div key={post.id} className="post-item two-column">
       <div className="two-column-main">
-        <a href={post.url} className="post-item-link">
+        <Link className="post-item-link" to={`/editor/${post.id}`}>
           <strong>{post.title}</strong>
           <span>{post.headline}</span>
-        </a>
+        </Link>
         <div className="post-item-info">
           {post.metas.map((meta) =>
             <span key={meta.slug}>{meta.name}</span>
           )}
-          <a href="">{moment(post.created).format('ll')}</a>
+          <a href={post.url}>{moment(post.created).format('ll')}</a>
         </div>
       </div>
       <div className="two-column-action">
@@ -51,14 +51,6 @@ function PostPreview(post) {
 
 
 function PostList(props) {
-  if (props.data.length === 0) {
-    return (
-      <div className="content">
-        Empty.
-      </div>
-    )
-  }
-
   return (
     <div className="content">
       {props.data.map((post) =>
@@ -69,19 +61,21 @@ function PostList(props) {
 }
 
 
-@inject('postStore')
+@inject('postStore', 'asideStore')
 @observer
 class Post extends React.Component {
 
   componentDidMount() {
     this.props.postStore.fetch()
+    this.props.asideStore.show()
   }
 
   render() {
     const newPostButton = (
         <Link to="/editor">
           <button type="button" className="btn btn-primary">
-          <span>New Post</span></button>
+            <span>New Post</span>
+          </button>
         </Link>
       )
     return (

@@ -313,8 +313,44 @@ html {
     border-bottom: 1px solid #e9eaec;
 }
 
+.writer-head:after {
+    display: table;
+    content: '';
+    clear: both;
+}
+
+.writer-head-left {
+    float: left;
+}
+
 .writer-head-content {
-    text-align: right;
+    float: right;
+}
+
+.navigate-back {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.navigate-back > span {
+    color: #495060;
+    font-size: 12px;
+    font-weight: 600;
+    margin-left: 8px;
+}
+
+.navigate-back .icon {
+    display: inline-block;
+    text-align: center;
+    width: 32px;
+    height: 32px;
+    line-height: 30px;
+    box-sizing: border-box;
+    font-size: 24px;
+    color: #495060;
+    border: 1px solid #495060;
+    border-radius: 100%;
+    vertical-align: middle;
 }
 
 .btn {
@@ -390,7 +426,9 @@ html {
 }
 
 .writer-main {
-    padding: 20px 20px;
+    padding: 30px 20px;
+    max-width: 960px;
+    margin: 0 auto;
 }
 
 .writer-main .post-field input {
@@ -419,7 +457,6 @@ html {
     min-height: 200px;
     font-size: 16px;
     font-family: inherit;
-    line-height: 22px;
     overflow-x: hidden;
     resize: none;
     border: none;

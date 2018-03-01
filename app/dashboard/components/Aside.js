@@ -60,6 +60,9 @@ function Bottom(props) {
 @observer
 class Aside extends React.Component {
   render() {
+    if (!this.props.asideStore.visible) {
+      return null
+    }
     const asideClass = classNames('side', { 'collapse': this.props.asideStore.collapse })
     return (
       <aside className={asideClass}>
