@@ -1,31 +1,89 @@
-import { observable, action } from 'mobx'
+import { observable, computed, action } from 'mobx'
 import axios from 'axios'
 
 import agent from '../agent'
 
+const LIMIT = 10
+
 class PostStore {
-    @observable posts = []
-    @observable drafts = []
-    @observable state = 'pending' // 'pending' / 'done' / 'error'
+  @observable state = 'pending' // 'pending' / 'done' / 'error'
+  @observable page = 0
+  @observable cache = observable.map()
 
-    @action 
-    fetch() {
-        this.posts = []
-        this.state = 'pending'
+  clear() {
+    this.cache.clear()
+    this.page = 0
+  }
 
-        // posts?draft=true
+  find(id) {
+    return this.cache.get(id)
+  }
 
-        agent.get('posts').then(
-            action('success', posts => {
-                this.posts = posts.data
-                this.state = 'done'
-            }),
+  @computed get posts() {
+    return this.cache.values()
+  }
 
-            action('error', error => {
-                this.state = 'error'
-            })
-        )
+  @action setPage(page) {
+    this.page = page
+  }
+
+  @action 
+  fetch() {
+    this.state = 'pending'
+
+    agent.Posts.all(this.page, LIMIT).then(
+      action('success', res => {
+        this.cache.clear()
+        res.data.forEach(post => this.cache.set(post.id, post))
+        this.state = 'done'
+      }),
+
+      action('error', error => {
+        this.state = 'error'
+      })
+    )
+  }
+
+  @action
+  get(id, acceptCached=false) {
+    if (acceptCached) {
+      const article = this.getArticle(slug);
+      if (article) return Promise.resolve(article);
     }
+    return agent.Posts.get(id).then(
+      action('get', res => {
+        this.cache.set(res.data.id, res.data)
+        return res.data
+      })
+    )
+  }
+
+  @action
+  create(data) {
+    return agent.Posts.create(data).then(
+      action('create', res => {
+        this.cache.set(res.data.id, res.data)
+        return res.data
+      })
+    )
+  }
+
+  @action
+  update(id, data) {
+    return agent.Posts.update(id, data).then(
+      action('update', res => {
+        this.cache.set(res.data.id, res.data)
+        return res.data
+      })
+    )
+  }
+
+  @action
+  destory(id) {
+    this.cache.delete(id)
+    return agent.Posts.destory(id)
+  }
+
 }
 
 export default new PostStore()

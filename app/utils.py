@@ -48,7 +48,6 @@ class HTTPTokenAuthPlus(HTTPTokenAuth):
 
         if request.method != 'OPTIONS':  # pragma: no cover
             password = None
-            print('authenticate', self.authenticate(auth, password))
             if not self.authenticate(auth, password):
                 # Clear TCP receive buffer of any pending data
                 request.data
