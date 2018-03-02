@@ -9,13 +9,17 @@ import App from './components/App'
 import asideStore from './stores/asideStore'
 import userStore from './stores/userStore'
 import postStore from './stores/postStore'
+import sideStore from './stores/sideStore'
 import editorStore from './stores/editorStore'
+
+
 
 const stores = {
   asideStore,
   userStore,
   postStore,
-  editorStore
+  sideStore,
+  editorStore,
 }
 
 window.stores = stores

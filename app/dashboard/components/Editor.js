@@ -3,6 +3,8 @@ import { inject, observer } from 'mobx-react'
 import { withRouter, Link } from 'react-router-dom'
 // import SimpleMDE from 'simplemde'
 
+import Side from './Side'
+
 
 function EditorHeader(props) {
   return (
@@ -13,16 +15,16 @@ function EditorHeader(props) {
         </Link>
       </div>
       <div className='writer-head-content'>
-        <button type="button" className="btn btn-ghost" onClick={props.submit}>
+        <button type="button" className="btn btn-ghost" onClick={props.onPublishClicked}>
           <span>Publish</span>
         </button>
-        <button type="button" className="btn btn-text btn-icon-only">
+        <button type="button" className="btn btn-text btn-icon-only" onClick={props.onMarkdownHelpClicked}>
           <i className="icon ion-help-circled"></i>
         </button>
-        <button type="button" className="btn btn-text btn-icon-only">
+        <button type="button" className="btn btn-text btn-icon-only" onClick={props.onPhotoChooserClicked}>
           <i className="icon ion-image"></i>
         </button>
-        <button type="button" className="btn btn-text btn-icon-only">
+        <button type="button" className="btn btn-text btn-icon-only" onClick={props.onPostMetaClicked}>
           <i className="icon ion-pricetag"></i>
         </button>
       </div>
@@ -41,7 +43,7 @@ function EditorHeader(props) {
 // }
 
 
-@inject('editorStore', 'asideStore')
+@inject('editorStore', 'asideStore', 'sideStore')
 @withRouter
 @observer
 class Editor extends React.Component {
@@ -51,7 +53,10 @@ class Editor extends React.Component {
     this.changeTitle = this.changeTitle.bind(this)
     this.changeHeadline = this.changeHeadline.bind(this)
     this.changeContent = this.changeContent.bind(this)
-    this.submit = this.submit.bind(this)
+    this.onMarkdownHelpClicked = this.onMarkdownHelpClicked.bind(this)
+    this.onPhotoChooserClicked = this.onPhotoChooserClicked.bind(this)
+    this.onPostMetaClicked = this.onPostMetaClicked.bind(this)
+    this.onPublishClicked = this.onPublishClicked.bind(this)
   }
 
   componentWillMount() {
@@ -87,7 +92,19 @@ class Editor extends React.Component {
     this.props.editorStore.setContent(e.target.value)
   }
 
-  submit(e) {
+  onMarkdownHelpClicked(e) {
+    this.props.sideStore.show('help')
+  }
+
+  onPhotoChooserClicked(e) {
+    this.props.sideStore.show('photo')
+  }
+
+  onPostMetaClicked(e) {
+    this.props.sideStore.show('meta')
+  }
+
+  onPublishClicked(e) {
     e.preventDefault();
     const { editorStore } = this.props
     editorStore.submit()
@@ -101,7 +118,12 @@ class Editor extends React.Component {
     const { inProgress, errors, title, slug, headline, content } = this.props.editorStore
     return (
       <div className="main">
-        <EditorHeader submit={this.submit}/>
+        <EditorHeader
+          onPublishClicked={this.onPublishClicked}
+          onMarkdownHelpClicked={this.onMarkdownHelpClicked}
+          onPhotoChooserClicked={this.onPhotoChooserClicked}
+          onPostMetaClicked={this.onPostMetaClicked}
+        />
         <section className="writer-main">
           <form>
             <div className="post-field title">
@@ -116,6 +138,7 @@ class Editor extends React.Component {
             </div>
           </form>
         </section>
+        <Side />
       </div>
     )
   }
