@@ -22,7 +22,7 @@ function MainContainer(props) {
   return (
     <div className="main">
       <div className="container">
-      {props.children}
+        {props.children}
       </div>
     </div>
   )

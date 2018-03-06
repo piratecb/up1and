@@ -43,7 +43,7 @@ function EditorHeader(props) {
 // }
 
 
-@inject('editorStore', 'asideStore', 'sideStore')
+@inject('editorStore', 'postStore','asideStore', 'sideStore')
 @withRouter
 @observer
 class Editor extends React.Component {
@@ -57,6 +57,7 @@ class Editor extends React.Component {
     this.onPhotoChooserClicked = this.onPhotoChooserClicked.bind(this)
     this.onPostMetaClicked = this.onPostMetaClicked.bind(this)
     this.onPublishClicked = this.onPublishClicked.bind(this)
+    this.onDeleteClicked = this.onDeleteClicked.bind(this)
   }
 
   componentWillMount() {
@@ -104,6 +105,14 @@ class Editor extends React.Component {
     this.props.sideStore.show('meta')
   }
 
+  onDeleteClicked(e) {
+    const id = this.props.editorStore.id
+    if (id) {
+      this.props.postStore.destory(id)
+        .then(() => this.props.history.replace(`/posts/`))
+    }
+  }
+
   onPublishClicked(e) {
     e.preventDefault();
     const { editorStore } = this.props
@@ -138,7 +147,7 @@ class Editor extends React.Component {
             </div>
           </form>
         </section>
-        <Side />
+        <Side onDeleteClicked={this.onDeleteClicked} />
       </div>
     )
   }

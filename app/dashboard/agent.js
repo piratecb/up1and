@@ -32,7 +32,7 @@ const Posts = {
   byMeta: (meta, page, limit=10) =>
     requests.get(`/posts/meta/${meta}?${postArgument(limit, page)}`),
   destory: id =>
-    requests.del(`/posts/${id}`),
+    requests.delete(`/posts/${id}`),
   get: id =>
     requests.get(`/posts/${id}`),
   update: (id, data) =>

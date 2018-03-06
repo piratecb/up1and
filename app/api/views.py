@@ -184,8 +184,8 @@ class PostAPI(Resource):
         if not post:
             abort(404, message="Post {} doesn't exist".format(pid))
 
-        session.delete(post)
-        session.commit()
+        db.session.delete(post)
+        db.session.commit()
         return {}, 204
 
 
