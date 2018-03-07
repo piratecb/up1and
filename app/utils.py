@@ -31,7 +31,7 @@ def extend_attribute(obj, new_attr, attr):
         return _extend(obj)
 
 
-class HTTPTokenAuthPlus(HTTPTokenAuth):
+class HTTPJWTAuth(HTTPTokenAuth):
     def login_with_token(self):
         auth = None
         if 'Authorization' in request.headers:

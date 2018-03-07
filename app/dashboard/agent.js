@@ -6,11 +6,11 @@ function getCookie(name) {
   if (parts.length == 2) return parts.pop().split(";").shift()
 }
 
-const token = getCookie('token')
+const session = getCookie('jwt')
 const requests = axios.create({
   baseURL: '/api',
   timeout: 1000,
-  headers: {'Authorization': 'Bearer ' + token}
+  headers: {'Authorization': 'Bearer ' + session}
 })
 
 function postArgument(count, p, type, draft) {

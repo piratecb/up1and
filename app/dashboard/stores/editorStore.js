@@ -31,8 +31,8 @@ class EditorStore {
         if (!post) throw new Error('Can\'t load post')
         this.title = post.title
         this.slug = post.slug
-        this.headline = post.headline
-        this.content = post.content
+        this.headline = post.headline || ''
+        this.content = post.content || ''
         this.metas = post.metas
       }))
       .finally(action(() => { this.inProgress = false }))

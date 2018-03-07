@@ -71,7 +71,7 @@ def login():
         if user is not None and user.verify_password(form.password.data):
             login_user(user, form.remember_me.data)
             response = make_response(redirect(request.args.get('next') or url_for('main.index')))
-            response.set_cookie('token', user.generate_token())
+            response.set_cookie('jwt', user.generate_token())
             return response
         flash('用户名或密码错误')
     return render_template('account/login.html', form=form, title='Login')
@@ -90,8 +90,10 @@ def signup():
 @login_required
 def logout():
     logout_user()
+    response = make_response(redirect(url_for('main.index')))
+    response.set_cookie('jwt', expires=0)
     flash('你已退出登陆')
-    return redirect(url_for('main.index'))
+    return response
 
 @main.route('/dashboard/')
 @login_required

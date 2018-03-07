@@ -5,12 +5,12 @@ from flask_httpauth import HTTPBasicAuth, MultiAuth
 from . import api
 from .. import db
 from ..models import Post, User, Meta, AnonymousUser
-from ..utils import HTTPTokenAuthPlus, extend_attribute
+from ..utils import HTTPJWTAuth, extend_attribute
 
 rest_api = Api(api)
 
 basic_auth = HTTPBasicAuth()
-token_auth = HTTPTokenAuthPlus('Bearer')
+token_auth = HTTPJWTAuth('Bearer')
 auth = MultiAuth(basic_auth, token_auth)
 
 @basic_auth.verify_password
@@ -63,6 +63,17 @@ post_fields = {
     'views': fields.Integer
 }
 
+page_fields = {
+    'id': fields.Integer,
+    'slug': fields.String,
+    'title': fields.String,
+    'content': fields.String,
+    'created': fields.DateTime,
+    'updated': fields.DateTime,
+    'url': fields.Url('main.page', absolute=True),
+    'author': fields.Nested(user_fields)
+}
+
 
 class TokenAPI(Resource):
     method_decorators = [auth.login_required]
@@ -71,11 +82,9 @@ class TokenAPI(Resource):
         token = g.user.generate_token(3600)
         return jsonify({'token': token.decode('ascii'), 'duration': 3600, 'username': g.user.username})
 
-
 class PostListAPI(Resource):
     def __init__(self):
         self.parser = reqparse.RequestParser()
-        self.parser.add_argument('type', default='post', type=str)
         self.parser.add_argument('draft', default=False, type=bool)
         self.parser.add_argument('limit', default=10, type=int)
         self.parser.add_argument('page', default=1, type=int)
@@ -91,7 +100,7 @@ class PostListAPI(Resource):
             if not g.user.can('POST'):
                 abort(403)
 
-        queryset = Post.query.filter_by(type=args.type, status=not args.draft).order_by(Post.created.desc())
+        queryset = Post.query.filter_by(type='post', status=not args.draft).order_by(Post.created.desc())
         endpoint = 'api.posts'
 
         if username:
@@ -128,7 +137,6 @@ class PostAPI(Resource):
         self.parser.add_argument('slug', type=str)
         self.parser.add_argument('headline', type=str)
         self.parser.add_argument('content', type=str)
-        self.parser.add_argument('type', default='post', type=str)
         self.parser.add_argument('status', default=True, type=bool)
         super(PostAPI, self).__init__()
 
@@ -152,10 +160,7 @@ class PostAPI(Resource):
     def post(self):
         args = self.parser.parse_args()
 
-        if args.type.lower() == 'page' and not g.user.can('PAGE'):
-            abort(403)
-
-        post = Post(title=args.title, headline=args.headline, content=args.content, status=args.status, author_id=g.user.id)
+        post = Post(title=args.title, slug=args.slug, headline=args.headline, content=args.content, status=args.status, author_id=g.user.id)
         db.session.add(post)
         db.session.commit()
         post = extend_attribute(post, 'pid', 'id')
@@ -185,6 +190,83 @@ class PostAPI(Resource):
             abort(404, message="Post {} doesn't exist".format(pid))
 
         db.session.delete(post)
+        db.session.commit()
+        return {}, 204
+
+
+class PageListAPI(Resource):
+    def __init__(self):
+        self.parser = reqparse.RequestParser()
+        self.parser.add_argument('limit', default=10, type=int)
+        self.parser.add_argument('page', default=1, type=int)
+        super(PageListAPI, self).__init__()
+
+    @marshal_with(page_fields)
+    def get(self):
+        args = self.parser.parse_args()
+
+        queryset = Post.query.filter_by(type='page').order_by(Post.created.desc())
+        endpoint = 'api.pages'
+
+        pagination = queryset.paginate(args.page, per_page=args.limit, error_out=False)
+        pages = extend_attribute(pagination.items, 'pid', 'id')
+
+        return pages
+
+
+class PageAPI(Resource):
+    def __init__(self):
+        self.parser = reqparse.RequestParser()
+        self.parser.add_argument('title', type=str)
+        self.parser.add_argument('slug', type=str)
+        self.parser.add_argument('content', type=str)
+        super(PageAPI, self).__init__()
+
+    @marshal_with(page_fields)
+    def get(self, slug):
+        page = Post.query.filter_by(slug=slug, type='page').first()
+        page = extend_attribute(page, 'pid', 'id')
+
+        if not page:
+            abort(404, message="Page /{} doesn't exist".format(slug))
+
+        return page
+
+    @marshal_with(page_fields)
+    @token_auth.permission_required('PAGE')
+    def post(self):
+        args = self.parser.parse_args()
+
+        page = Post(title=args.title, slug=args.slug, content=args.content, type='page', author_id=g.user.id)
+        db.session.add(page)
+        db.session.commit()
+        page = extend_attribute(page, 'pid', 'id')
+        return page
+
+    @marshal_with(page_fields)
+    @token_auth.permission_required('PAGE')
+    def put(self, slug):
+        args = self.parser.parse_args()
+        page = Post.query.filter_by(slug=slug, type='page').first()
+        page = extend_attribute(page, 'pid', 'id')
+
+        if not page:
+            abort(404, message="Page /{} doesn't exist".format(slug))
+
+        for k, v in args.items():
+            if v:
+                setattr(page, k, v)
+
+        db.session.commit()
+        return page, 201
+
+    @token_auth.permission_required('PAGE')
+    def delete(self, slug):
+        page = Post.query.filter_by(slug=slug, type='page').first()
+        if not page:
+            abort(404, message="Page /{} doesn't exist".format(slug))
+
+        db.session.delete(page)
         db.session.commit()
         return {}, 204
 
@@ -253,6 +335,9 @@ rest_api.add_resource(PostListAPI, '/posts/author/<path:username>', endpoint='po
 rest_api.add_resource(PostListAPI, '/posts/meta/<path:slug>', endpoint='posts_by_meta')
 rest_api.add_resource(PostAPI, '/posts/<int:pid>', endpoint='post', methods=['GET', 'PUT', 'DELETE'])
 rest_api.add_resource(PostAPI, '/posts', methods=['POST'])
+rest_api.add_resource(PageListAPI, '/pages', endpoint='pages')
+rest_api.add_resource(PageAPI, '/pages/<path:slug>', endpoint='page', methods=['GET', 'PUT', 'DELETE'])
+rest_api.add_resource(PageAPI, '/pages', methods=['POST'])
 rest_api.add_resource(UserAPI, '/users/<path:username>', endpoint='user')
 rest_api.add_resource(MetaListAPI, '/metas', endpoint='metas')
 rest_api.add_resource(MetaAPI, '/metas/<path:slug>', endpoint='meta')
