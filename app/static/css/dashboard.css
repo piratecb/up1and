@@ -596,6 +596,10 @@ html {
     -webkit-overflow-scrolling: touch;
 }
 
+.post-meta .side-overlay-view {
+    border-top: 1px solid #e9eaec;
+}
+
 .side-overlay-mask {
     position: fixed;
     top: 0;

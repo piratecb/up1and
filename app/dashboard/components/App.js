@@ -9,18 +9,11 @@ import Home from './Home'
 import Setting from './Setting'
 
 
-@inject('asideStore')
+@inject('uiStore')
 @withRouter
 @observer
 class App extends React.Component {
-  componentDidMount() {
-      window.addEventListener('resize', this.props.asideStore.update)
-  }
-
-  componentWillUnmount() {
-      window.removeEventListener('resize', this.props.asideStore.update)
-  }
-
+  
   render() {
     return (
       <div className="layout">

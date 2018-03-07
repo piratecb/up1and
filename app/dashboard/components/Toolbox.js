@@ -1,13 +1,11 @@
 import React from 'react'
-import { NavLink } from 'react-router-dom'
 import { inject, observer } from 'mobx-react'
-import classNames from 'classnames'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs'
 
 
 function MarkdownHelpView(props) {
   return (
-      <Tabs className="side-overlay-main">
+      <Tabs className="side-overlay-main markdown-help">
         <TabList className="side-overlay-head">
           <Tab>Basic</Tab>
           <Tab>Image</Tab>
@@ -54,7 +52,7 @@ class PhotoChooserView extends React.Component {
 
   render() {
     return (
-        <Tabs className="side-overlay-main">
+        <Tabs className="side-overlay-main photo-chooser">
           <TabList className="side-overlay-head">
             <Tab>Images</Tab>
           </TabList>
@@ -86,13 +84,9 @@ class PhotoChooserView extends React.Component {
 
 class PostMetaView extends React.Component {
 
-  constructor(props) {
-    super(props)
-  }
-
   render() {
     return (
-        <Tabs className="side-overlay-main">
+        <Tabs className="side-overlay-main post-meta">
           <TabList className="side-overlay-head">
             <Tab>Basic</Tab>
             <Tab>Metas</Tab>
@@ -142,26 +136,17 @@ class PostMetaView extends React.Component {
 }
 
 
-@inject('sideStore')
+@inject('uiStore')
 @observer
-class Side extends React.Component {
-
-  constructor(props) {
-    super(props)
-    this.onMaskClicked = this.onMaskClicked.bind(this)
-  }
-
-  onMaskClicked(e) {
-    this.props.sideStore.hide()
-  }
+class Toolbox extends React.Component {
 
   render() {
-    if (!this.props.sideStore.visible) {
+    if (!this.props.uiStore.toolbox.visible) {
       return null
     }
 
     let component = null
-    switch (this.props.sideStore.side) {
+    switch (this.props.uiStore.toolbox.show) {
       case 'help':
         component = <MarkdownHelpView />
         break
@@ -175,7 +160,7 @@ class Side extends React.Component {
 
     return (
       <aside className="side-overlay">
-        <div className="side-overlay-mask" onClick={this.onMaskClicked}></div>
+        <div className="side-overlay-mask" onClick={this.props.onMaskClicked}></div>
         {component}
       </aside>
     )
@@ -183,4 +168,4 @@ class Side extends React.Component {
 
 }
 
-export default Side
+export default Toolbox

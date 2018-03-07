@@ -5,6 +5,10 @@ import { Section } from './Layout'
 
 class Setting extends React.Component {
 
+  componentDidMount() {
+    document.title = 'Settings'
+  }
+
   render() {
     return (
       <div className="main">

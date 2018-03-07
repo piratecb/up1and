@@ -6,19 +6,17 @@ import { useStrict } from 'mobx'
 
 import App from './components/App'
 
-import asideStore from './stores/asideStore'
+import uiStore from './stores/uiStore'
 import userStore from './stores/userStore'
 import postStore from './stores/postStore'
-import sideStore from './stores/sideStore'
 import editorStore from './stores/editorStore'
 
 
 
 const stores = {
-  asideStore,
+  uiStore,
   userStore,
   postStore,
-  sideStore,
   editorStore,
 }
 

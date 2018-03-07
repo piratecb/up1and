@@ -2,6 +2,10 @@ import React from 'react'
 
 class Home extends React.Component {
 
+  componentDidMount() {
+    document.title = 'Dashboard'
+  }
+
   render() {
     return (
       <div className="main">

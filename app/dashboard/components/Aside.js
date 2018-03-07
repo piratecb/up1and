@@ -4,18 +4,6 @@ import { inject, observer } from 'mobx-react'
 import classNames from 'classnames'
 
 
-const PRIMARY_MENUS = [
-      {icon: 'ion-ios-home-outline', url: '/', name: 'Home'},
-      {icon: 'ion-ios-list-outline', url: '/posts', name: 'Posts'},
-      {icon: 'ion-ios-pricetag-outline', url: '/metas', name: 'Metas'},
-      {icon: 'ion-ios-paper-outline', url: '/pages', name: 'Pages'}
-    ]
-const SETTING_MENUS = [
-      {icon: 'ion-ios-settings', url: '/settings', name: 'Settings'},
-      {icon: 'ion-log-out', url: '/logout', name: 'Logout'}
-    ]
-
-
 function Menu(props) {
   return (
     <nav className="menu">
@@ -56,22 +44,47 @@ function Bottom(props) {
 }
 
 
-@inject('asideStore', 'userStore')
+@inject('uiStore', 'userStore')
 @observer
 class Aside extends React.Component {
+
+  constructor(props) {
+    super(props)
+    this.aside = this.props.uiStore.aside
+    this.aside.toggle = this.props.uiStore.toggleAside
+    this.primaryMenus = [
+        {icon: 'ion-ios-home-outline', url: '/', name: 'Home'},
+        {icon: 'ion-ios-list-outline', url: '/posts', name: 'Posts'},
+        {icon: 'ion-ios-pricetag-outline', url: '/metas', name: 'Metas'},
+        {icon: 'ion-ios-paper-outline', url: '/pages', name: 'Pages'}
+      ]
+    this.settingMenus = [
+        {icon: 'ion-ios-settings', url: '/settings', name: 'Settings'},
+        {icon: 'ion-log-out', url: '/logout', name: 'Logout'}
+      ]
+  }
+
+  componentDidMount() {
+    window.addEventListener('resize', this.props.uiStore.updateAside)
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.props.uiStore.updateAside)
+  }
+
   render() {
-    if (!this.props.asideStore.visible) {
+    if (!this.aside.visible) {
       return null
     }
-    const asideClass = classNames('side', { 'collapse': this.props.asideStore.collapse })
+    const asideClass = classNames('side', { 'collapse': this.aside.collapse })
     return (
       <aside className={asideClass}>
         <Logo currentUser={this.props.userStore.currentUser}/>
         <div className="navgation">
-          <Menu items={PRIMARY_MENUS} />
-          <Menu items={SETTING_MENUS} />
+          <Menu items={this.primaryMenus} />
+          <Menu items={this.settingMenus} />
         </div>
-        <Bottom aside={this.props.asideStore} />
+        <Bottom aside={this.aside} />
       </aside>
     )
   }

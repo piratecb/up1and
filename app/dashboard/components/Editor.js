@@ -1,9 +1,10 @@
 import React from 'react'
 import { inject, observer } from 'mobx-react'
 import { withRouter, Link } from 'react-router-dom'
+
 // import SimpleMDE from 'simplemde'
 
-import Side from './Side'
+import Toolbox from './Toolbox'
 
 
 function EditorHeader(props) {
@@ -43,7 +44,7 @@ function EditorHeader(props) {
 // }
 
 
-@inject('editorStore', 'postStore','asideStore', 'sideStore')
+@inject('editorStore', 'postStore', 'uiStore')
 @withRouter
 @observer
 class Editor extends React.Component {
@@ -58,6 +59,7 @@ class Editor extends React.Component {
     this.onPostMetaClicked = this.onPostMetaClicked.bind(this)
     this.onPublishClicked = this.onPublishClicked.bind(this)
     this.onDeleteClicked = this.onDeleteClicked.bind(this)
+    this.onMaskClicked = this.onMaskClicked.bind(this)
   }
 
   componentWillMount() {
@@ -65,8 +67,9 @@ class Editor extends React.Component {
   }
 
   componentDidMount() {
-    this.props.asideStore.hide()
+    this.props.uiStore.hideAside()
     this.props.editorStore.load()
+    document.title = this.props.match.params.id ? 'Edit Post' : 'New Post'
   }
 
   componentDidUpdate(prevProps) {
@@ -94,15 +97,19 @@ class Editor extends React.Component {
   }
 
   onMarkdownHelpClicked(e) {
-    this.props.sideStore.show('help')
+    this.props.uiStore.showToolbox('help')
   }
 
   onPhotoChooserClicked(e) {
-    this.props.sideStore.show('photo')
+    this.props.uiStore.showToolbox('photo')
   }
 
   onPostMetaClicked(e) {
-    this.props.sideStore.show('meta')
+    this.props.uiStore.showToolbox('meta')
+  }
+
+  onMaskClicked(e) {
+    this.props.uiStore.hideToolbox()
   }
 
   onDeleteClicked(e) {
@@ -147,7 +154,7 @@ class Editor extends React.Component {
             </div>
           </form>
         </section>
-        <Side onDeleteClicked={this.onDeleteClicked} />
+        <Toolbox onDeleteClicked={this.onDeleteClicked} onMaskClicked={this.onMaskClicked}/>
       </div>
     )
   }

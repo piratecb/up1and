@@ -61,13 +61,14 @@ function PostList(props) {
 }
 
 
-@inject('postStore', 'asideStore')
+@inject('postStore', 'uiStore')
 @observer
 class Post extends React.Component {
 
   componentDidMount() {
     this.props.postStore.fetch()
-    this.props.asideStore.show()
+    this.props.uiStore.showAside()
+    document.title = 'Posts'
   }
 
   render() {
