@@ -43,9 +43,9 @@ user_fields = {
 }
 
 meta_fields = {
+    'id': fields.Integer,
     'slug': fields.String,
     'name': fields.String,
-    'type': fields.String,
     'description': fields.String,
 }
 
@@ -323,10 +323,57 @@ class MetaListAPI(Resource):
 
 
 class MetaAPI(Resource):
+    def __init__(self):
+        self.parser = reqparse.RequestParser()
+        self.parser.add_argument('name', type=str)
+        self.parser.add_argument('slug', type=str)
+        self.parser.add_argument('description', type=str)
+        super(MetaAPI, self).__init__()
+
     @marshal_with(meta_fields)
-    def get(self, slug):
-        meta = Meta.query.filter(Meta.slug == slug).first()
+    def get(self, mid):
+        meta = Meta.query.get(mid)
+        if not meta:
+            abort(404, message="Meta {} doesn't exist".format(mid))
         return meta
+
+    @marshal_with(meta_fields)
+    @token_auth.permission_required('POST')
+    def post(self):
+        args = self.parser.parse_args()
+
+        meta = Meta(name=args.name, slug=args.slug, description=args.description, type='tag')
+        db.session.add(meta)
+        db.session.commit()
+        meta = extend_attribute(meta, 'pid', 'id')
+        return meta
+
+    @marshal_with(meta_fields)
+    @token_auth.permission_required('POST')
+    def put(self, mid):
+        args = self.parser.parse_args()
+        meta = Meta.query.get(mid)
+        meta = extend_attribute(meta, 'pid', 'id')
+
+        if not meta:
+            abort(404, message="Meta {} doesn't exist".format(mid))
+
+        for k, v in args.items():
+            if v:
+                setattr(meta, k, v)
+
+        db.session.commit()
+        return meta, 201
+
+    @token_auth.permission_required('POST')
+    def delete(self, mid):
+        meta = Meta.query.get(mid)
+        if not meta:
+            abort(404, message="Meta {} doesn't exist".format(mid))
+
+        db.session.delete(meta)
+        db.session.commit()
+        return {}, 204
 
 
 
@@ -340,6 +387,7 @@ rest_api.add_resource(PageAPI, '/pages/<path:slug>', endpoint='page', methods=['
 rest_api.add_resource(PageAPI, '/pages', methods=['POST'])
 rest_api.add_resource(UserAPI, '/users/<path:username>', endpoint='user')
 rest_api.add_resource(MetaListAPI, '/metas', endpoint='metas')
-rest_api.add_resource(MetaAPI, '/metas/<path:slug>', endpoint='meta')
+rest_api.add_resource(MetaAPI, '/metas/<int:mid>', endpoint='meta', methods=['GET', 'PUT', 'DELETE'])
+rest_api.add_resource(MetaAPI, '/metas', methods=['POST'])
 
 rest_api.add_resource(TokenAPI, '/token/', endpoint='token')

@@ -63,7 +63,7 @@ function PostList(props) {
 
 @inject('postStore', 'uiStore')
 @observer
-class Post extends React.Component {
+class Posts extends React.Component {
 
   componentDidMount() {
     this.props.postStore.fetch()
@@ -72,8 +72,8 @@ class Post extends React.Component {
   }
 
   render() {
-    const newPostButton = (
-        <Link to="/editor">
+    const newPost = (
+        <Link to="/post">
           <button type="button" className="btn btn-primary">
             <span>New Post</span>
           </button>
@@ -81,7 +81,7 @@ class Post extends React.Component {
       )
     return (
       <MainContainer>
-        <Section title="Drafts" action={newPostButton}>
+        <Section title="Drafts" action={newPost}>
           <PostList component={DraftPreview} data={[]} />
         </Section>
         <Section title="Published">
@@ -93,4 +93,4 @@ class Post extends React.Component {
 
 }
 
-export default Post
+export default Posts

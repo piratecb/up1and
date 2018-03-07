@@ -102,9 +102,9 @@ class PostMetaView extends React.Component {
                 </div>
               </div>
               <div className="side-overlay-view">
-                <div className="form-field small">
+                <div className="form-field">
                   <span><label>Slug</label></span>
-                  <input className="form-field-input" type="text" placeholder="" />
+                  <input className="form-field-input" type="text" />
                 </div>
               </div>
             </TabPanel>

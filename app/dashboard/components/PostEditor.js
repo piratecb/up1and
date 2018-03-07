@@ -44,10 +44,10 @@ function EditorHeader(props) {
 // }
 
 
-@inject('editorStore', 'postStore', 'uiStore')
+@inject('postEditor', 'postStore', 'uiStore')
 @withRouter
 @observer
-class Editor extends React.Component {
+class PostEditor extends React.Component {
 
   constructor(props) {
     super(props)
@@ -63,28 +63,28 @@ class Editor extends React.Component {
   }
 
   componentWillMount() {
-    this.props.editorStore.setPostID(this.props.match.params.id)
+    this.props.postEditor.setID(this.props.match.params.id)
   }
 
   componentDidMount() {
     this.props.uiStore.hideAside()
-    this.props.editorStore.load()
+    this.props.postEditor.load()
     document.title = this.props.match.params.id ? 'Edit Post' : 'New Post'
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.match.params.id !== prevProps.match.params.id) {
-      this.props.editorStore.setPostID(this.props.match.params.id)
-      this.props.editorStore.load()
+      this.props.postEditor.setID(this.props.match.params.id)
+      this.props.postEditor.load()
     }
   }
 
   changeTitle(e) {
-    this.props.editorStore.setTitle(e.target.value)
+    this.props.postEditor.setTitle(e.target.value)
   }
 
   changeHeadline(e) {
-    this.props.editorStore.setHeadline(e.target.value)
+    this.props.postEditor.setHeadline(e.target.value)
   }
 
   setTextareaHeight() {
@@ -93,7 +93,7 @@ class Editor extends React.Component {
 
   changeContent(e) {
     this.setTextareaHeight()
-    this.props.editorStore.setContent(e.target.value)
+    this.props.postEditor.setContent(e.target.value)
   }
 
   onMarkdownHelpClicked(e) {
@@ -113,7 +113,7 @@ class Editor extends React.Component {
   }
 
   onDeleteClicked(e) {
-    const id = this.props.editorStore.id
+    const id = this.props.postEditor.id
     if (id) {
       this.props.postStore.destory(id)
         .then(() => this.props.history.replace(`/posts/`))
@@ -122,16 +122,16 @@ class Editor extends React.Component {
 
   onPublishClicked(e) {
     e.preventDefault();
-    const { editorStore } = this.props
-    editorStore.submit()
+    const { postEditor } = this.props
+    postEditor.submit()
       .then(post => {
-        editorStore.reset()
+        postEditor.reset()
         this.props.history.replace(`/posts/`)
       })
   }
 
   render() {
-    const { inProgress, errors, title, slug, headline, content } = this.props.editorStore
+    const { inProgress, errors, title, slug, headline, content } = this.props.postEditor
     return (
       <div className="main">
         <EditorHeader
@@ -161,4 +161,4 @@ class Editor extends React.Component {
 
 }
 
-export default Editor
+export default PostEditor

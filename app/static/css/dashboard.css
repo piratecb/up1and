@@ -399,6 +399,10 @@ html {
     outline: 0;
 }
 
+.btn+.btn {
+    margin-left: 8px;
+}
+
 .btn-primary {
     color: #fff;
     background-color: #2d8cf0;
@@ -682,6 +686,48 @@ html {
     width: 100%;
     line-height: 1;
     padding: 7px;
+}
+
+textarea.form-field-input {
+    height: 100px;
+}
+
+.meta-form {
+    max-width: 400px;
+}
+
+.tag {
+    font-size: 14px;
+    line-height: 1.5;
+    color: rgba(0, 0, 0, 0.65);
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    margin: 0 8px 8px 0;
+    padding: 0;
+    list-style: none;
+    display: inline-block;
+    line-height: 20px;
+    height: 22px;
+    padding: 0 7px;
+    border-radius: 4px;
+    border: 1px solid #d9d9d9;
+    background: #fafafa;
+    font-size: 12px;
+    -webkit-transition: all 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
+    transition: all 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
+    opacity: 1;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.tag:hover {
+    opacity: 0.85;
+}
+
+.tag-checked {
+    background-color: #2d8cf0;
+    border-color: transparent;
+    color: #fff;
 }
 
 

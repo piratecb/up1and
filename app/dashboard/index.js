@@ -9,15 +9,18 @@ import App from './components/App'
 import uiStore from './stores/uiStore'
 import userStore from './stores/userStore'
 import postStore from './stores/postStore'
-import editorStore from './stores/editorStore'
-
+import metaStore from './stores/metaStore'
+import postEditor from './stores/postEditor'
+import metaEditor from './stores/metaEditor'
 
 
 const stores = {
   uiStore,
   userStore,
   postStore,
-  editorStore,
+  metaStore,
+  postEditor,
+  metaEditor,
 }
 
 window.stores = stores

@@ -2,7 +2,7 @@ import { observable, action } from 'mobx'
 import postStore from './postStore'
 
 
-class EditorStore {
+class PostEditor {
   @observable inProgress = false
   @observable errors = undefined
   @observable id = undefined
@@ -15,7 +15,7 @@ class EditorStore {
   // status type
 
   @action
-  setPostID(id) {
+  setID(id) {
     if (this.id !== id) {
       this.reset()
       this.id = id
@@ -97,4 +97,4 @@ class EditorStore {
   }
 }
 
-export default new EditorStore()
+export default new PostEditor()

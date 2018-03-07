@@ -11,8 +11,26 @@ class UiStore {
     collapse: false
   }
 
+  @observable meta = {
+    visible: false
+  }
+
   constructor() {
     this.updateAside()
+  }
+
+  @action.bound
+  showMetaform() {
+    this.meta = {
+      visible: true
+    }
+  }
+
+  @action.bound
+  hideMetaform() {
+    this.meta = {
+      visible: false
+    }
   }
 
   @action.bound
