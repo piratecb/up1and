@@ -43,6 +43,7 @@ class Metas extends React.Component {
 
   componentDidMount() {
     this.props.metaStore.fetch()
+    this.props.metaEditor.hide()
     document.title = 'Metas'
   }
 

@@ -151,7 +151,7 @@ class PostAPI(Resource):
 
         if not post.status:
             token_auth.login_with_token()
-            if not g.user.can('OPERATE'):
+            if not g.user.can('POST'):
                 abort(403)
 
         return post

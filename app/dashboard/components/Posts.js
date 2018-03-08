@@ -61,12 +61,13 @@ function PostList(props) {
 }
 
 
-@inject('postStore', 'uiStore')
+@inject('postStore', 'draftStore', 'uiStore')
 @observer
 class Posts extends React.Component {
 
   componentDidMount() {
     this.props.postStore.fetch()
+    this.props.draftStore.fetch()
     this.props.uiStore.showAside()
     document.title = 'Posts'
   }
@@ -82,7 +83,7 @@ class Posts extends React.Component {
     return (
       <MainContainer>
         <Section title="Drafts" action={newPost}>
-          <PostList component={DraftPreview} data={[]} />
+          <PostList component={DraftPreview} data={this.props.draftStore.posts} />
         </Section>
         <Section title="Published">
           <PostList component={PostPreview} data={this.props.postStore.posts} />

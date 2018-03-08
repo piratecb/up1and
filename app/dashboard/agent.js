@@ -13,20 +13,15 @@ const requests = axios.create({
   headers: {'Authorization': 'Bearer ' + session}
 })
 
-function postArgument(count, p, type, draft) {
-	let args = `limit=${count}&offset=${p ? p * count : 0}`
-	if (type === 'page') {
-		args = `type=${type}&` + args
-	}
-	if (draft === true) {
-		args = `draft=true&` + args
-	}
-	return args
+function postArgument(count, p, draft) {
+  let text = `limit=${count}&offset=${p ? p * count : 0}`
+  text = draft ? `draft=true&` + text : text
+  return text
 }
 
 const Posts = {
-  all: (page, limit=10, type='post', draft=false) =>
-    requests.get(`/posts?${postArgument(limit, page, type, draft)}`),
+  all: (page, limit=10, draft=false) =>
+    requests.get(`/posts?${postArgument(limit, page, draft)}`),
   byAuthor: (username, page, limit=5) =>
     requests.get(`/posts/author/${username}?${postArgument(limit, page)}`),
   byMeta: (meta, page, limit=10) =>

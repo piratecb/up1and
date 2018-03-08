@@ -122,9 +122,10 @@ class PostEditor extends React.Component {
   }
 
   onBackClicked(e) {
-    this.props.postEditor.submit()
+    const status = this.props.postEditor.status
+    this.props.postEditor.submit(status)
       .then(post => {
-        postEditor.reset()
+        this.props.postEditor.reset()
       })
   }
 
