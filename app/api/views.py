@@ -137,6 +137,7 @@ class PostAPI(Resource):
         self.parser.add_argument('slug', type=str)
         self.parser.add_argument('headline', type=str)
         self.parser.add_argument('content', type=str)
+        self.parser.add_argument('metas', action='append')
         self.parser.add_argument('status', default=True, type=bool)
         super(PostAPI, self).__init__()
 
@@ -161,6 +162,7 @@ class PostAPI(Resource):
         args = self.parser.parse_args()
 
         post = Post(title=args.title, slug=args.slug, headline=args.headline, content=args.content, status=args.status, author_id=g.user.id)
+        post.add_metas(args.metas)
         db.session.add(post)
         db.session.commit()
         post = extend_attribute(post, 'pid', 'id')
@@ -177,7 +179,9 @@ class PostAPI(Resource):
             abort(404, message="Post {} doesn't exist".format(pid))
 
         for k, v in args.items():
-            if v:
+            if k == 'metas':
+                post.add_metas(v)
+            else:
                 setattr(post, k, v)
 
         db.session.commit()

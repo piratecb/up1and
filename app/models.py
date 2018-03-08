@@ -125,6 +125,12 @@ class Post(db.Model):
     def __repr__(self):
         return '<Post %r %r>' % (self.title, self.created)
 
+    def add_metas(self, metas):
+        if metas is None:
+            metas = []
+        metas = [Meta.query.get(m) for m in metas]
+        self.metas[:] = metas
+
 
 class AnonymousUser(AnonymousUserMixin):
     def can(self, permissions):

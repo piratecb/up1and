@@ -11,8 +11,8 @@ class PostEditor {
   @observable slug = ''
   @observable headline = ''
   @observable content = ''
+  @observable status = true
   @observable metas = []
-  // status type
 
   @action
   setID(id) {
@@ -33,7 +33,8 @@ class PostEditor {
         this.slug = post.slug
         this.headline = post.headline || ''
         this.content = post.content || ''
-        this.metas = post.metas
+        this.status = post.status
+        this.metas = post.metas.map(meta => meta.id)
       }))
       .finally(action(() => { this.inProgress = false }))
   }
@@ -44,6 +45,7 @@ class PostEditor {
     this.slug = ''
     this.headline = ''
     this.content = ''
+    this.status = true
     this.metas = []
   }
 
@@ -70,7 +72,7 @@ class PostEditor {
   @action
   addMeta(meta) {
     if (this.metas.includes(meta)) return
-    this.metas.push(meta);
+    this.metas.push(meta)
   }
 
   @action
@@ -79,15 +81,18 @@ class PostEditor {
   }
 
   @action
-  submit() {
+  submit(publish=false) {
     this.inProgress = true
     this.errors = undefined
+    this.status = publish ? true : false
+    if (!this.title) return Promise.resolve()
     const post = {
       title: this.title,
       slug: this.slug,
       headline: this.headline,
       content: this.content,
-      // metas: this.metas
+      metas: this.metas,
+      status: this.status
     }
     return (this.id ? postStore.update(this.id, post) : postStore.create(post))
       .catch(action((err) => {

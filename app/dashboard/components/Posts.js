@@ -11,7 +11,7 @@ function DraftPreview(post) {
   return (
     <div key={post.id} className="post-item two-column">
       <div className="two-column-main">
-        <Link className="post-item-link" to={`/editor/${post.id}`}>
+        <Link className="post-item-link" to={`/post/${post.id}`}>
           <strong>{post.title}</strong>
         </Link>
         <div className="post-item-info">
@@ -29,7 +29,7 @@ function PostPreview(post) {
   return (
     <div key={post.id} className="post-item two-column">
       <div className="two-column-main">
-        <Link className="post-item-link" to={`/editor/${post.id}`}>
+        <Link className="post-item-link" to={`/post/${post.id}`}>
           <strong>{post.title}</strong>
           <span>{post.headline}</span>
         </Link>

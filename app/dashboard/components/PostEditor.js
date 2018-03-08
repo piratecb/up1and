@@ -11,7 +11,7 @@ function EditorHeader(props) {
   return (
     <div className='writer-head'>
       <div className='writer-head-left'>
-        <Link to="/posts" className="navigate-back">
+        <Link to="/posts" className="navigate-back" onClick={props.onBackClicked}>
           <i className="icon ion-ios-arrow-thin-left"></i><span>Posts</span>
         </Link>
       </div>
@@ -59,6 +59,7 @@ class PostEditor extends React.Component {
     this.onPostMetaClicked = this.onPostMetaClicked.bind(this)
     this.onPublishClicked = this.onPublishClicked.bind(this)
     this.onDeleteClicked = this.onDeleteClicked.bind(this)
+    this.onBackClicked = this.onBackClicked.bind(this)
     this.onMaskClicked = this.onMaskClicked.bind(this)
   }
 
@@ -120,10 +121,17 @@ class PostEditor extends React.Component {
     }
   }
 
+  onBackClicked(e) {
+    this.props.postEditor.submit()
+      .then(post => {
+        postEditor.reset()
+      })
+  }
+
   onPublishClicked(e) {
     e.preventDefault();
     const { postEditor } = this.props
-    postEditor.submit()
+    postEditor.submit(true)
       .then(post => {
         postEditor.reset()
         this.props.history.replace(`/posts/`)
@@ -139,6 +147,7 @@ class PostEditor extends React.Component {
           onMarkdownHelpClicked={this.onMarkdownHelpClicked}
           onPhotoChooserClicked={this.onPhotoChooserClicked}
           onPostMetaClicked={this.onPostMetaClicked}
+          onBackClicked={this.onBackClicked}
         />
         <section className="writer-main">
           <form>

@@ -1,6 +1,9 @@
 import React from 'react'
 import { inject, observer } from 'mobx-react'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs'
+import classNames from 'classnames'
+
+import MetaEditor from './MetaEditor'
 
 
 function MarkdownHelpView(props) {
@@ -82,9 +85,89 @@ class PhotoChooserView extends React.Component {
 }
 
 
-class PostMetaView extends React.Component {
+@inject('postEditor')
+@observer
+class Tag extends React.Component {
+
+  constructor(props) {
+    super(props)
+    this.onTagClicked = this.onTagClicked.bind(this)
+  }
+
+  onTagClicked() {
+    if (this.props.postEditor.metas.includes(this.props.meta.id)) {
+      this.props.postEditor.removeMeta(this.props.meta.id)
+    } else {
+      this.props.postEditor.addMeta(this.props.meta.id)
+    }
+  }
 
   render() {
+    const checked = this.props.postEditor.metas.includes(this.props.meta.id)
+    const tagClass = classNames('tag', {'tag-checked': checked})
+    return (
+      <div className={tagClass} onClick={this.onTagClicked}>{this.props.meta.name}</div>
+    )
+  }
+
+}
+
+
+@inject('postEditor', 'metaEditor', 'metaStore', 'uiStore')
+@observer
+class PostMetaView extends React.Component {
+
+  constructor(props) {
+    super(props)
+    this.changeSlug = this.changeSlug.bind(this)
+    this.onNewMetaClicked = this.onNewMetaClicked.bind(this)
+    this.onBackClicked = this.onBackClicked.bind(this)
+    this.onMarkDraftClicked = this.onMarkDraftClicked.bind(this)
+    this.onSaveClicked = this.onSaveClicked.bind(this)
+  }
+
+  componentDidMount() {
+    this.props.metaStore.fetch()
+  }
+
+  changeSlug(e) {
+    this.props.postEditor.setSlug(e.target.value)
+  }
+
+  onNewMetaClicked(e) {
+    this.props.metaEditor.show()
+    this.props.metaEditor.reset()
+  }
+
+  onBackClicked(e) {
+    this.props.metaEditor.hide()
+  }
+
+  onMarkDraftClicked(e) {
+    this.props.postEditor.submit().then(post => {
+        this.props.uiStore.hideToolbox()
+      }
+    )
+  }
+
+  onSaveClicked(e) {
+    this.props.postEditor.submit().then(post => {
+        this.props.uiStore.hideToolbox()
+      }
+    )
+  }
+
+  render() {
+    const slug = this.props.postEditor.slug
+    const metas = this.props.metaStore.metas
+    const metaItemView = metas.map((meta) =>
+                  <Tag key={meta.id} meta={meta} />
+                )
+    const metaEditorView = <MetaEditor autoClose={true} /> 
+    const newMetaButton = <button type="button" className="btn" onClick={this.onNewMetaClicked}><span>New Meta</span></button>
+    const backButton = <button type="button" className="btn" onClick={this.onBackClicked}><span>Back</span></button>
+    const markDraftButton = <button type="button" className="btn" onClick={this.onMarkDraftClicked}><span>Mark as draft</span></button>
+    const saveButton = <button type="button" className="btn btn-primary" onClick={this.onSaveClicked}><span>Save</span></button>
     return (
         <Tabs className="side-overlay-main post-meta">
           <TabList className="side-overlay-head">
@@ -98,30 +181,33 @@ class PostMetaView extends React.Component {
                 <div className="two-column-main">
                 </div> 
                 <div className="two-column-action">
-                  <button type="button" className="btn btn-primary"><span>Save</span></button>
+                  {saveButton}
                 </div>
               </div>
               <div className="side-overlay-view">
                 <div className="form-field">
                   <span><label>Slug</label></span>
-                  <input className="form-field-input" type="text" />
+                  <input className="form-field-input" type="text" value={slug} onChange={this.changeSlug} />
                 </div>
               </div>
             </TabPanel>
             <TabPanel>
               <div className="two-column side-overlay-action">
                 <div className="two-column-main">
-                  <button type="button" className="btn"><span>New Meta</span></button>
+                  {this.props.metaEditor.visible ? backButton : newMetaButton}
                 </div> 
                 <div className="two-column-action">
-                  <button type="button" className="btn btn-primary"><span>Save</span></button>
+                  {saveButton}
                 </div>
+              </div>
+              <div className="side-overlay-view">
+                {this.props.metaEditor.visible ? metaEditorView : metaItemView}
               </div>
             </TabPanel>
             <TabPanel>
               <div className="two-column side-overlay-action">
                 <div className="two-column-main">
-                  <button type="button" className="btn"><span>Mark as draft</span></button>
+                  {this.props.postEditor.status ? markDraftButton : null}
                 </div> 
                 <div className="two-column-action">
                   <button type="button" className="btn btn-error" onClick={this.props.onDeleteClicked}><span>Delete</span></button>

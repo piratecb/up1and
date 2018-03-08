@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { inject, observer} from 'mobx-react'
 import classNames from 'classnames'
 
+import MetaEditor from './MetaEditor'
 import { Section } from './Layout'
 
 
@@ -31,101 +32,6 @@ class Tag extends React.Component {
 }
 
 
-@inject('metaEditor', 'metaStore')
-@observer
-class MetaForm extends React.Component {
-
-  constructor(props) {
-    super(props)
-    this.onCreateClicked = this.onCreateClicked.bind(this)
-    this.onDeleteClicked = this.onDeleteClicked.bind(this)
-  }
-
-  changeName = e => this.props.metaEditor.setName(e.target.value)
-  changeSlug = e => this.props.metaEditor.setSlug(e.target.value)
-  changeDescription = e => this.props.metaEditor.setDescription(e.target.value)
-
-  onCreateClicked(e) {
-    e.preventDefault()
-    const { metaEditor } = this.props
-    metaEditor.submit()
-  }
-
-  onDeleteClicked(e) {
-    const id = this.props.metaEditor.id
-    if (id) {
-      this.props.metaStore.destory(id)
-        .then(() => {
-          this.props.metaEditor.reset()
-          this.props.metaEditor.hide()
-      })
-    }
-  }
-
-  render() {
-    const { inProgress, errors, name, slug, description } = this.props.metaEditor
-    const hasID = this.props.metaEditor.id
-    const title = hasID ? 'Edit' : 'New'
-    if (!this.props.metaEditor.visible) {
-      return null
-    }
-    const createButton = (
-      <button type="button" className="btn btn-primary" onClick={this.onCreateClicked}>
-        {this.props.metaEditor.id ? 'Save' : 'Create'}
-      </button>
-    )
-    const deleteButton = (
-      <button type="button" className="btn btn-error" onClick={this.onDeleteClicked}>
-        Delete
-      </button>
-    )
-    return (
-      <Section title={title}>
-        <div className="content">
-          <form className="meta-form">
-            <div className="form-field">
-              <span><label>Name</label></span>
-              <input 
-                className="form-field-input"
-                type="text"
-                value={name}
-                onChange={this.changeName}
-              />
-            </div>
-
-            <div className="form-field">
-              <span><label>Slug</label></span>
-              <input 
-                className="form-field-input"
-                type="text"
-                value={slug}
-                onChange={this.changeSlug}
-              />
-            </div>
-
-            <div className="form-field">
-              <span><label>Description</label></span>
-              <textarea 
-                className="form-field-input"
-                type="text"
-                value={description}
-                onChange={this.changeDescription}
-              />
-            </div>
-
-            <div className="form-field">
-              {createButton}
-              {this.props.metaEditor.id ? deleteButton : null}
-            </div>
-          </form>
-        </div>
-      </Section>
-    )
-  }
-
-}
-
-
 @inject('metaStore', 'metaEditor')
 @observer
 class Metas extends React.Component {
@@ -146,6 +52,15 @@ class Metas extends React.Component {
   }
 
   render() {
+    const hasID = this.props.metaEditor.id
+    const title = hasID ? 'Edit' : 'New'
+    const formSection = (
+      <Section title={title}>
+        <div className="content">
+          <MetaEditor />
+        </div>
+      </Section>
+    )
     const button = (
       <button type="button" className="btn btn-primary" onClick={this.onNewMetaClicked}>
         <span>New Meta</span>
@@ -162,7 +77,7 @@ class Metas extends React.Component {
             )}
           </div>
         </Section>
-        <MetaForm />
+        {this.props.metaEditor.visible ? formSection : null}
         </div>
       </div>
     )
