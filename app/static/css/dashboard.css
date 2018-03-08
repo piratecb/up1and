@@ -754,7 +754,7 @@ textarea.form-field-input {
     padding: 10px;
     box-shadow: none;
     border-radius: 0;
-    min-height: 140px;
+    height: 140px;
 }
 
 .page-card .meta {

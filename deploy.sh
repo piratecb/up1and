@@ -10,5 +10,8 @@ git checkout master
 
 chmod +x deploy.sh
 
+npm install
+npm run build
+
 supervisorctl restart up1and
 service nginx restart
