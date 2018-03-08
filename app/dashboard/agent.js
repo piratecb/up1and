@@ -36,6 +36,19 @@ const Posts = {
     requests.post('/posts', data)
 }
 
+const Pages = {
+  all: () =>
+    requests.get(`/pages`),
+  destory: id =>
+    requests.delete(`/pages/${id}`),
+  get: id =>
+    requests.get(`/pages/${id}`),
+  update: (id, data) =>
+    requests.put(`/pages/${id}`, data),
+  create: (data) =>
+    requests.post('/pages', data)
+}
+
 const Metas = {
   all: () =>
     requests.get(`/metas`),
@@ -53,5 +66,5 @@ const Metas = {
 export default {
   Posts,
   Metas,
-//   Metas,
+  Pages,
 }

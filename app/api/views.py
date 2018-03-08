@@ -227,8 +227,8 @@ class PageAPI(Resource):
         super(PageAPI, self).__init__()
 
     @marshal_with(page_fields)
-    def get(self, slug):
-        page = Post.query.filter_by(slug=slug, type='page').first()
+    def get(self, pid):
+        page = Post.query.get(pid)
         page = extend_attribute(page, 'pid', 'id')
 
         if not page:
@@ -249,9 +249,9 @@ class PageAPI(Resource):
 
     @marshal_with(page_fields)
     @token_auth.permission_required('PAGE')
-    def put(self, slug):
+    def put(self, pid):
         args = self.parser.parse_args()
-        page = Post.query.filter_by(slug=slug, type='page').first()
+        page = Post.query.get(pid)
         page = extend_attribute(page, 'pid', 'id')
 
         if not page:
@@ -265,8 +265,8 @@ class PageAPI(Resource):
         return page, 201
 
     @token_auth.permission_required('PAGE')
-    def delete(self, slug):
-        page = Post.query.filter_by(slug=slug, type='page').first()
+    def delete(self, pid):
+        page = Post.query.get(pid)
         if not page:
             abort(404, message="Page /{} doesn't exist".format(slug))
 
@@ -387,7 +387,7 @@ rest_api.add_resource(PostListAPI, '/posts/meta/<path:slug>', endpoint='posts_by
 rest_api.add_resource(PostAPI, '/posts/<int:pid>', endpoint='post', methods=['GET', 'PUT', 'DELETE'])
 rest_api.add_resource(PostAPI, '/posts', methods=['POST'])
 rest_api.add_resource(PageListAPI, '/pages', endpoint='pages')
-rest_api.add_resource(PageAPI, '/pages/<path:slug>', endpoint='page', methods=['GET', 'PUT', 'DELETE'])
+rest_api.add_resource(PageAPI, '/pages/<int:pid>', endpoint='page', methods=['GET', 'PUT', 'DELETE'])
 rest_api.add_resource(PageAPI, '/pages', methods=['POST'])
 rest_api.add_resource(UserAPI, '/users/<path:username>', endpoint='user')
 rest_api.add_resource(MetaListAPI, '/metas', endpoint='metas')

@@ -9,6 +9,7 @@ import App from './components/App'
 import userStore from './stores/userStore'
 import postStore from './stores/postStore'
 import draftStore from './stores/draftStore'
+import pageStore from './stores/pageStore'
 import metaStore from './stores/metaStore'
 import asideStore from './stores/asideStore'
 import toolboxStore from './stores/toolboxStore'
@@ -21,6 +22,7 @@ const stores = {
   userStore,
   postStore,
   draftStore,
+  pageStore,
   metaStore,
   postEditor,
   metaEditor,

@@ -38,7 +38,7 @@ class MetaEditor extends React.Component {
 
   render() {
     const { inProgress, errors, name, slug, description } = this.props.metaEditor
-    const createButton = (
+    const saveButton = (
       <button type="button" className="btn btn-primary" onClick={this.onSubmit}>
         {this.props.metaEditor.id ? 'Save' : 'Create'}
       </button>
@@ -81,7 +81,7 @@ class MetaEditor extends React.Component {
         </div>
 
         <div className="form-field">
-          {createButton}
+          {saveButton}
           {this.props.metaEditor.id ? deleteButton : null}
         </div>
       </form>
