@@ -10,9 +10,6 @@ import Home from './Home'
 import Setting from './Setting'
 
 
-@inject('uiStore')
-@withRouter
-@observer
 class App extends React.Component {
 
   render() {

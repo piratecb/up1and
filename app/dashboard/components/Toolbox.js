@@ -113,7 +113,7 @@ class Tag extends React.Component {
 }
 
 
-@inject('postEditor', 'metaEditor', 'metaStore', 'uiStore')
+@inject('postEditor', 'metaEditor', 'metaStore', 'toolboxStore')
 @observer
 class PostMetaView extends React.Component {
 
@@ -145,14 +145,14 @@ class PostMetaView extends React.Component {
 
   onMarkDraftClicked(e) {
     this.props.postEditor.submit().then(post => {
-        this.props.uiStore.hideToolbox()
+        this.props.toolboxStore.hide()
       }
     )
   }
 
   onSaveClicked(e) {
     this.props.postEditor.submit().then(post => {
-        this.props.uiStore.hideToolbox()
+        this.props.toolboxStore.hide()
       }
     )
   }
@@ -222,17 +222,17 @@ class PostMetaView extends React.Component {
 }
 
 
-@inject('uiStore')
+@inject('toolboxStore')
 @observer
 class Toolbox extends React.Component {
 
   render() {
-    if (!this.props.uiStore.toolbox.visible) {
+    if (!this.props.toolboxStore.visible) {
       return null
     }
 
     let component = null
-    switch (this.props.uiStore.toolbox.show) {
+    switch (this.props.toolboxStore.side) {
       case 'help':
         component = <MarkdownHelpView />
         break

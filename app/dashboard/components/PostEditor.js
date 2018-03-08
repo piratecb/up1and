@@ -44,7 +44,7 @@ function EditorHeader(props) {
 // }
 
 
-@inject('postEditor', 'postStore', 'uiStore')
+@inject('postEditor', 'postStore', 'asideStore', 'toolboxStore')
 @withRouter
 @observer
 class PostEditor extends React.Component {
@@ -68,7 +68,7 @@ class PostEditor extends React.Component {
   }
 
   componentDidMount() {
-    this.props.uiStore.hideAside()
+    this.props.asideStore.hide()
     this.props.postEditor.load()
     document.title = this.props.match.params.id ? 'Edit Post' : 'New Post'
   }
@@ -98,19 +98,19 @@ class PostEditor extends React.Component {
   }
 
   onMarkdownHelpClicked(e) {
-    this.props.uiStore.showToolbox('help')
+    this.props.toolboxStore.show('help')
   }
 
   onPhotoChooserClicked(e) {
-    this.props.uiStore.showToolbox('photo')
+    this.props.toolboxStore.show('photo')
   }
 
   onPostMetaClicked(e) {
-    this.props.uiStore.showToolbox('meta')
+    this.props.toolboxStore.show('meta')
   }
 
   onMaskClicked(e) {
-    this.props.uiStore.hideToolbox()
+    this.props.toolboxStore.hide()
   }
 
   onDeleteClicked(e) {
@@ -122,7 +122,7 @@ class PostEditor extends React.Component {
   }
 
   onBackClicked(e) {
-    const status = this.props.postEditor.status
+    const status = this.props.postEditor.id && this.props.postEditor.status
     this.props.postEditor.submit(status)
       .then(post => {
         this.props.postEditor.reset()

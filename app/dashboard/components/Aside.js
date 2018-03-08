@@ -44,14 +44,13 @@ function Bottom(props) {
 }
 
 
-@inject('uiStore', 'userStore')
+@inject('asideStore', 'userStore')
 @observer
 class Aside extends React.Component {
 
   constructor(props) {
     super(props)
-    this.aside = this.props.uiStore.aside
-    this.aside.toggle = this.props.uiStore.toggleAside
+    this.aside = this.props.asideStore
     this.primaryMenus = [
         {icon: 'ion-ios-home-outline', url: '/', name: 'Home'},
         {icon: 'ion-ios-list-outline', url: '/posts', name: 'Posts'},
@@ -65,11 +64,11 @@ class Aside extends React.Component {
   }
 
   componentDidMount() {
-    window.addEventListener('resize', this.props.uiStore.updateAside)
+    window.addEventListener('resize', this.props.asideStore.update)
   }
 
   componentWillUnmount() {
-    window.removeEventListener('resize', this.props.uiStore.updateAside)
+    window.removeEventListener('resize', this.props.asideStore.update)
   }
 
   render() {

@@ -6,23 +6,26 @@ import { useStrict } from 'mobx'
 
 import App from './components/App'
 
-import uiStore from './stores/uiStore'
 import userStore from './stores/userStore'
 import postStore from './stores/postStore'
 import draftStore from './stores/draftStore'
 import metaStore from './stores/metaStore'
+import asideStore from './stores/asideStore'
+import toolboxStore from './stores/toolboxStore'
+
 import postEditor from './stores/postEditor'
 import metaEditor from './stores/metaEditor'
 
 
 const stores = {
-  uiStore,
   userStore,
   postStore,
   draftStore,
   metaStore,
   postEditor,
   metaEditor,
+  asideStore,
+  toolboxStore,
 }
 
 window.stores = stores
