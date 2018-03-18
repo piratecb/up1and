@@ -119,7 +119,6 @@ class PostMetaView extends React.Component {
 
   constructor(props) {
     super(props)
-    this.changeSlug = this.changeSlug.bind(this)
     this.onNewMetaClicked = this.onNewMetaClicked.bind(this)
     this.onBackClicked = this.onBackClicked.bind(this)
     this.onMarkDraftClicked = this.onMarkDraftClicked.bind(this)
@@ -130,8 +129,8 @@ class PostMetaView extends React.Component {
     this.props.metaStore.fetch()
   }
 
-  changeSlug(e) {
-    this.props.postEditor.setSlug(e.target.value)
+  onChange = e => {
+    this.props.postEditor.setValue(e.target)
   }
 
   onNewMetaClicked(e) {
@@ -187,7 +186,7 @@ class PostMetaView extends React.Component {
               <div className="side-overlay-view">
                 <div className="form-field">
                   <span><label>Slug</label></span>
-                  <input className="form-field-input" type="text" value={slug} onChange={this.changeSlug} />
+                  <input className="form-field-input" type="text" value={slug} name="slug" onChange={this.onChange} />
                 </div>
               </div>
             </TabPanel>

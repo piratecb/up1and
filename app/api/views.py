@@ -52,6 +52,7 @@ meta_fields = {
 post_fields = {
     'id': fields.Integer,
     'title': fields.String,
+    'slug': fields.String,
     'headline': fields.String,
     'content': fields.String,
     'created': fields.DateTime,

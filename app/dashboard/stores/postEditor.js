@@ -50,23 +50,9 @@ class PostEditor {
   }
 
   @action
-  setTitle(title) {
-    this.title = title
-  }
-
-  @action
-  setSlug(slug) {
-    this.slug = slug
-  }
-
-  @action
-  setHeadline(headline) {
-    this.headline = headline
-  }
-
-  @action
-  setContent(content) {
-    this.content = content
+  setValue(target) {
+    const { name, value } = target
+    this[name] = value
   }
 
   @action

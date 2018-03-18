@@ -51,9 +51,6 @@ class PostEditor extends React.Component {
 
   constructor(props) {
     super(props)
-    this.changeTitle = this.changeTitle.bind(this)
-    this.changeHeadline = this.changeHeadline.bind(this)
-    this.changeContent = this.changeContent.bind(this)
     this.onMarkdownHelpClicked = this.onMarkdownHelpClicked.bind(this)
     this.onPhotoChooserClicked = this.onPhotoChooserClicked.bind(this)
     this.onPostMetaClicked = this.onPostMetaClicked.bind(this)
@@ -80,21 +77,13 @@ class PostEditor extends React.Component {
     }
   }
 
-  changeTitle(e) {
-    this.props.postEditor.setTitle(e.target.value)
-  }
-
-  changeHeadline(e) {
-    this.props.postEditor.setHeadline(e.target.value)
+  onChange = e => {
+    this.props.postEditor.setValue(e.target)
+    if (e.target.name === 'content') this.setTextareaHeight()
   }
 
   setTextareaHeight() {
     this.refs.content.style.cssText = 'height:' + this.refs.content.scrollHeight + 'px'
-  }
-
-  changeContent(e) {
-    this.setTextareaHeight()
-    this.props.postEditor.setContent(e.target.value)
   }
 
   onMarkdownHelpClicked(e) {
@@ -140,7 +129,7 @@ class PostEditor extends React.Component {
   }
 
   render() {
-    const { inProgress, errors, title, slug, headline, content } = this.props.postEditor
+    const { inProgress, errors, title, headline, content } = this.props.postEditor
     return (
       <div className="main">
         <EditorHeader
@@ -153,14 +142,14 @@ class PostEditor extends React.Component {
         <section className="writer-main">
           <form>
             <div className="post-field title">
-              <input placeholder="Title" type="text" value={title} onChange={this.changeTitle} />
+              <input placeholder="Title" type="text" value={title} name="title" onChange={this.onChange} />
             </div>
             <div className="post-field headline">
-              <input placeholder="Headline" type="text" value={headline} onChange={this.changeHeadline} />
+              <input placeholder="Headline" type="text" value={headline} name="headline" onChange={this.onChange} />
             </div>
             <div className="post-field content">
-              <textarea placeholder="Content" type="text" className="markdown-area" 
-                ref="content" value={content} onChange={this.changeContent} />
+              <textarea placeholder="Content" type="text" className="markdown-area" name="content" 
+                ref="content" value={content} onChange={this.onChange} />
             </div>
           </form>
         </section>
