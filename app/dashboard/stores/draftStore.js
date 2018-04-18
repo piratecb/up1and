@@ -28,7 +28,7 @@ class DraftStore {
     agent.Posts.all(this.page, 10, true).then(
       action('success', res => {
         this.cache.clear()
-        res.data.forEach(post => this.cache.set(post.id, post))
+        res.data.items.forEach(post => this.cache.set(post.id, post))
         this.state = 'done'
       }),
 

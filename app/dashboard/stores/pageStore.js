@@ -26,7 +26,7 @@ class PageStore {
     agent.Pages.all().then(
       action('success', res => {
         this.cache.clear()
-        res.data.forEach(page => this.cache.set(page.id, page))
+        res.data.items.forEach(page => this.cache.set(page.id, page))
         this.state = 'done'
       }),
 

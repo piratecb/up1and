@@ -49,6 +49,11 @@ meta_fields = {
     'description': fields.String,
 }
 
+pagination_fields = {
+    'prev': fields.String,
+    'next': fields.String
+}
+
 post_fields = {
     'id': fields.Integer,
     'title': fields.String,
@@ -64,6 +69,11 @@ post_fields = {
     'views': fields.Integer
 }
 
+post_list_fields = {
+    'items': fields.List(fields.Nested(post_fields)),
+    'links': fields.Nested(pagination_fields)
+}
+
 page_fields = {
     'id': fields.Integer,
     'slug': fields.String,
@@ -73,6 +83,11 @@ page_fields = {
     'updated': fields.DateTime,
     'url': fields.Url('main.page', absolute=True),
     'author': fields.Nested(user_fields)
+}
+
+page_list_fields = {
+    'items': fields.List(fields.Nested(page_fields)),
+    'links': fields.Nested(pagination_fields)
 }
 
 
@@ -91,7 +106,7 @@ class PostListAPI(Resource):
         self.parser.add_argument('page', default=1, type=int)
         super(PostListAPI, self).__init__()
 
-    @marshal_with(post_fields)
+    @marshal_with(post_list_fields)
     def get(self, username=None, slug=None):
         args = self.parser.parse_args()
         status = not args.draft
@@ -117,18 +132,18 @@ class PostListAPI(Resource):
 
         params = request.args.copy()
         params['limit'] = self.parser.parse_args().limit
-        link = ''
-        link_template = '<{url}>;rel="{rel}",'
+        links = {}
         if pagination.has_prev:
             params['page'] = pagination.prev_num
             url = url_for(endpoint, username=username, slug=slug, _external=True, **params)
-            link += link_template.format(url=url, rel='prev')
+            links['prev'] = url
         if pagination.has_next:
             params['page'] = pagination.next_num
             url = url_for(endpoint, username=username, slug=slug, _external=True, **params)
-            link += link_template.format(url=url, rel='next')
+            links['next'] = url
 
-        return posts, {'Link': link}
+        data = {'items': posts, 'links': links}
+        return data
 
 
 class PostAPI(Resource):
@@ -206,7 +221,7 @@ class PageListAPI(Resource):
         self.parser.add_argument('page', default=1, type=int)
         super(PageListAPI, self).__init__()
 
-    @marshal_with(page_fields)
+    @marshal_with(page_list_fields)
     def get(self):
         args = self.parser.parse_args()
 
@@ -216,7 +231,20 @@ class PageListAPI(Resource):
         pagination = queryset.paginate(args.page, per_page=args.limit, error_out=False)
         pages = extend_attribute(pagination.items, 'pid', 'id')
 
-        return pages
+        params = request.args.copy()
+        params['limit'] = self.parser.parse_args().limit
+        links = {}
+        if pagination.has_prev:
+            params['page'] = pagination.prev_num
+            url = url_for(endpoint, _external=True, **params)
+            links['prev'] = url
+        if pagination.has_next:
+            params['page'] = pagination.next_num
+            url = url_for(endpoint, _external=True, **params)
+            links['next'] = url
+
+        data = {'items': pages, 'links': links}
+        return data
 
 
 class PageAPI(Resource):
