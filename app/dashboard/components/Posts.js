@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { inject, observer } from 'mobx-react'
 
-import moment from 'moment'
+import strftime from 'strftime'
 
 import { MainContainer, Section} from './Layout'
 
@@ -37,7 +37,7 @@ function PostPreview(post) {
           {post.metas.map((meta) =>
             <span key={meta.slug}>{meta.name}</span>
           )}
-          <a href={post.url}>{moment(post.created).format('ll')}</a>
+          <a href={post.url}>{strftime('%b %e, %Y', new Date(post.created))}</a>
         </div>
       </div>
       <div className="two-column-action">

@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { inject, observer} from 'mobx-react'
 
-import moment from 'moment'
+import strftime from 'strftime'
 
 import { Section } from './Layout'
 
@@ -19,7 +19,7 @@ class PageCard extends React.Component {
               {page.title}
             </Link>
           </div>
-          <div className="meta">{moment(page.created).format('ll')}</div>
+          <div className="meta">{strftime('%b %e, %Y', new Date(page.created))}</div>
           <div className="description">
             {page.content}
           </div>
