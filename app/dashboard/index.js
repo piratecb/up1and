@@ -2,7 +2,7 @@ import React from 'react'
 import { render } from 'react-dom'
 import { HashRouter } from 'react-router-dom'
 import { Provider } from 'mobx-react'
-import { useStrict } from 'mobx'
+import { configure } from 'mobx'
 
 import App from './components/App'
 
@@ -32,7 +32,9 @@ const stores = {
 
 window.stores = stores
 
-useStrict(true)
+configure({
+  enforceActions: 'observed'
+})
 
 render(
   <Provider {...stores}>

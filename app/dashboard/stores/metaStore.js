@@ -16,7 +16,7 @@ class MetaStore {
   }
 
   @computed get metas() {
-    return this.cache.values()
+    return Array.from(this.cache.values())
   }
 
   @action 

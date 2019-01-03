@@ -16,7 +16,7 @@ class PageStore {
   }
 
   @computed get pages() {
-    return this.cache.values()
+    return Array.from(this.cache.values())
   }
 
   @action 

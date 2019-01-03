@@ -19,7 +19,7 @@ class PostStore {
   }
 
   @computed get posts() {
-    return this.cache.values()
+    return Array.from(this.cache.values())
   }
 
   @action setPage(page) {

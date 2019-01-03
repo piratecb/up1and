@@ -37,5 +37,8 @@ nosetests.xml
 .DS_Store
 .python-version
 *.sqlite
+package-lock.json
 node_modules/
+.vscode/
+app/static/js/.cache
 app/static/js/dashboard.js
