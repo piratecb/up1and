@@ -4,7 +4,7 @@ from flask_httpauth import HTTPBasicAuth, MultiAuth
 
 from . import api
 from .. import db
-from ..models import Post, User, Meta, AnonymousUser
+from ..models import Post, User, Meta, Setting, AnonymousUser
 from ..utils import HTTPJWTAuth, extend_attribute
 
 rest_api = Api(api)
@@ -47,6 +47,13 @@ meta_fields = {
     'slug': fields.String,
     'name': fields.String,
     'description': fields.String,
+}
+
+setting_fields = {
+    'id': fields.Integer,
+    'key': fields.String,
+    'value': fields.String,
+    'type': fields.String,
 }
 
 pagination_fields = {
@@ -409,6 +416,31 @@ class MetaAPI(Resource):
         return {}, 204
 
 
+class SettingListAPI(Resource):
+    def __init__(self):
+        self.parser = reqparse.RequestParser()
+        self.parser.add_argument('type', action='append', default=['blog'])
+        super(SettingListAPI, self).__init__()
+
+    @marshal_with(setting_fields)
+    def get(self):
+        args = self.parser.parse_args()
+        settings = Setting.query.filter(Setting.type.in_(args.type)).all()
+        return settings
+
+    @marshal_with(setting_fields)
+    def put(self):
+        payload = request.get_json(force=True)
+        settings = Setting.query.all()
+
+        for setting in settings:
+            for k, v in payload.items():
+                if setting.key == k and setting.value != v:
+                    setting.value = v
+
+        db.session.commit()
+        return settings, 201
+
 
 rest_api.add_resource(PostListAPI, '/posts', endpoint='posts')
 rest_api.add_resource(PostListAPI, '/posts/author/<path:username>', endpoint='posts_by_author')
@@ -422,5 +454,6 @@ rest_api.add_resource(UserAPI, '/users/<path:username>', endpoint='user')
 rest_api.add_resource(MetaListAPI, '/metas', endpoint='metas')
 rest_api.add_resource(MetaAPI, '/metas/<int:mid>', endpoint='meta', methods=['GET', 'PUT', 'DELETE'])
 rest_api.add_resource(MetaAPI, '/metas', methods=['POST'])
+rest_api.add_resource(SettingListAPI, '/settings', endpoint='settings', methods=['GET', 'PUT'])
 
 rest_api.add_resource(TokenAPI, '/token/', endpoint='token')

@@ -34,6 +34,8 @@ class User(db.Model, UserMixin):
     password_hash = db.Column(db.String)
     token = db.Column(db.String)
     group = db.Column(db.String(16), default='user')
+    bio = db.Column(db.Text)
+    last_seen = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
     posts = db.relationship('Post', backref='author', lazy='dynamic')
 
@@ -130,6 +132,17 @@ class Post(db.Model):
             metas = []
         metas = [Meta.query.get(m) for m in metas]
         self.metas[:] = metas
+
+
+class Setting(db.Model):
+    __tablename__ = 'settings'
+    id = db.Column(db.Integer, primary_key=True)
+    key = db.Column(db.String(64))
+    value = db.Column(db.Text)
+    type = db.Column(db.String(64), default='blog')
+
+    def __repr__(self):
+        return '<Setting %r %r>' % (self.type, self.key)
 
 
 class AnonymousUser(AnonymousUserMixin):
