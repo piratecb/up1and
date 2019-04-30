@@ -1,6 +1,6 @@
 #! /bin/bash
 
-SITE_PATH='/var/www/up1and'
+SITE_PATH='/var/www/days'
 
 cd $SITE_PATH
 git reset --hard origin/master
@@ -13,5 +13,5 @@ chmod +x deploy.sh
 npm install
 npm run build
 
-supervisorctl restart up1and
+supervisorctl restart days
 service nginx restart

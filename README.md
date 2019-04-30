@@ -1,4 +1,19 @@
-# up1and
-Just Up1and
+# Days
 
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/piratecb/up1and/master/LICENSE)
+Days is simple blog system built up with Flask and React.
+
+## Setup
+
+TODO
+
+### Start development server
+
+TODO
+
+### Deploy
+
+TODO
+
+## Contributing
+
+TODO
