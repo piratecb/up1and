@@ -3,7 +3,7 @@ from flask_restful import Resource, Api, reqparse, fields, marshal_with, abort
 from flask_httpauth import HTTPBasicAuth, MultiAuth
 
 from . import api
-from .. import db
+from ..extensions import db
 from ..models import Post, User, Meta, Setting, AnonymousUser
 from ..utils import HTTPJWTAuth, extend_attribute
 

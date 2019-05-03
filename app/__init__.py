@@ -3,25 +3,21 @@ import hashlib
 import mistune
 
 from flask import Flask, url_for, request
-from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager
 
 from config import config
 
-db = SQLAlchemy()
 
-login_manager = LoginManager()
-login_manager.session_protection = 'strong'
-login_manager.login_view = 'main.login'
-
+def register_extensions(app):
+    from .extensions import db, login_manager
+    db.init_app(app)
+    login_manager.init_app(app)
 
 def create_app(config_name):
     app = Flask(__name__)
     app.config.from_object(config[config_name])
     config[config_name].init_app(app)
 
-    db.init_app(app)
-    login_manager.init_app(app)
+    register_extensions(app)
 
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)

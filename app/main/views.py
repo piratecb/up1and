@@ -7,7 +7,7 @@ from flask_login import login_required, login_user, logout_user, current_user
 
 from . import main
 from .forms import LoginForm, SignupForm
-from .. import db
+from ..extensions import db
 from ..models import User, Post, Meta
 from ..utils import ArchiveDict
 
