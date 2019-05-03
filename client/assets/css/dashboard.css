@@ -1,3 +1,6 @@
+@import 'pure.min.css';
+@import 'ionicons.min.css';
+
 * {
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;

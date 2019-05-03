@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 import os
-from app import create_app
-from app.models import User, Post
-from app.extensions import db
+from server import create_app
+from server.models import User, Post
+from server.extensions import db
 from flask_script import Manager, Shell
 from flask_migrate import Migrate, MigrateCommand
 

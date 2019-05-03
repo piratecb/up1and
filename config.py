@@ -1,5 +1,8 @@
 import os
+
 basedir = os.path.abspath(os.path.dirname(__file__))
+contentdir = os.path.join(basedir, 'content')
+dbdir = os.path.join(contentdir, 'data')
 
 
 class Config:
@@ -7,21 +10,24 @@ class Config:
     ANALYTICS_ID = os.environ.get('DAYS_ANALYTICS_ID') or 'YOUR GOOGLE ANALYTICS ID'
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    CONTENT_DIR = contentdir
+    ASSETS_DIR = os.path.join(basedir, 'build')
+    THEMES_DIR = os.path.join(contentdir, 'themes')
 
-    @staticmethod
-    def init_app(app):
+    @classmethod
+    def init_app(cls, app):
         pass
 
 
 class DevelopmentConfig(Config):
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
-        'sqlite:///' + os.path.join(basedir, 'data-dev.sqlite')
+        'sqlite:///' + os.path.join(dbdir, 'data-dev.sqlite')
 
 
 class ProductionConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
-        'sqlite:///' + os.path.join(basedir, 'data.sqlite')
+        'sqlite:///' + os.path.join(dbdir, 'data.sqlite')
 
 
 config = {

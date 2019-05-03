@@ -4,7 +4,6 @@
 
 {% block link %}
     <link rel="amphtml" href="{{ url_for('main.amp', pid=post.id, _external=True, _scheme='https') }}">
-    <script src="{{ hashed_url('build/main.js') }}"></script>
 {% endblock %}
 
 {% block content %}

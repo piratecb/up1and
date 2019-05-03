@@ -40,5 +40,3 @@ nosetests.xml
 package-lock.json
 node_modules/
 .vscode/
-app/static/js/.cache
-app/static/js/dashboard.js

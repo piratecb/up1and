@@ -2,17 +2,12 @@ const path = require('path')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 const ManifestPlugin = require('webpack-manifest-plugin')
 
-const kikoThemeConfig = require('./content/themes/kiko/webpack.config')
-
 const buildPath = path.resolve(__dirname, 'build')
-const clientPath = path.resolve(__dirname, 'client')
-const serverPath = path.resolve(__dirname, 'server')
 
 const config = {
   mode: 'development',
   entry: {
-    dashboard: clientPath + '/index.js',
-    common: serverPath + '/assets/common.js'
+    main: path.resolve(__dirname, 'assets') + '/main.js'
   },
   output: {
     path: buildPath,
@@ -20,7 +15,7 @@ const config = {
   },
   plugins: [
     new CleanWebpackPlugin(),
-    new ManifestPlugin()
+    new ManifestPlugin(),
   ],
   resolve: {
     extensions: ['.js', '.jsx', '.css']
@@ -29,7 +24,7 @@ const config = {
     rules: [
       {
         test: /\.jsx?$/,
-        use: ['babel-loader']
+        use: ['babel-loader'],
       },
       {
         test: /\.css$/,
@@ -51,4 +46,4 @@ const config = {
   }
 }
 
-module.exports = [config, kikoThemeConfig]
+module.exports = config

@@ -17,6 +17,7 @@ import toolboxStore from './stores/toolboxStore'
 import postEditor from './stores/postEditor'
 import metaEditor from './stores/metaEditor'
 
+import './assets/css/dashboard.css'
 
 const stores = {
   userStore,
