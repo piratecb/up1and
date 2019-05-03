@@ -29,26 +29,6 @@ def create_app(config_name):
     def format_datatime(value, format='%b %d, %Y'):
         return value.strftime(format)
 
-    @app.url_defaults
-    def hashed_static_url(endpoint, values):
-        if 'static' == endpoint or endpoint.endswith('.static'):
-            filename = values.get('filename')
-            if filename:
-                blueprint = request.blueprint
-                if '.' in endpoint:  # blueprint
-                    blueprint = endpoint.rsplit('.', 1)[0]
-
-                static_folder = app.static_folder
-                
-                # use blueprint, but dont set `static_folder` option
-                if blueprint and app.blueprints[blueprint].static_folder:
-                    static_folder = app.blueprints[blueprint].static_folder
-
-                fp = os.path.join(static_folder, filename)
-                if os.path.exists(fp):
-                    with open(fp, 'rb') as f:
-                        values['v'] = hashlib.md5(f.read()).hexdigest()[0:8]
-
     @app.template_filter('markdown')
     def render_markdown(content):
         renderer = mistune.Renderer(hard_wrap=True)
@@ -61,6 +41,21 @@ def create_app(config_name):
         hash = '' if email is None else hashlib.md5(email.encode('utf-8').lower()).hexdigest()
         return '{url}/{hash}?s={size}&d={default}&r={rating}'.format(
             url=url, hash=hash, size=size, default=default, rating=rating)
+
+    @app.context_processor
+    def hash_processor():
+        def hashed_url(filepath):
+            import re
+            directory, filename = filepath.rsplit('/')
+            name, extension = filename.rsplit('.')
+            folder = os.path.join(app.root_path, 'static', directory)
+            files = os.listdir(folder)
+            for f in files:
+                regex = name + "\.[a-z0-9]+\." + extension
+                if re.match(regex, f):
+                    return os.path.join('/static', directory, f).replace('\\', '/')
+            return os.path.join('/static', filepath).replace('\\', '/')
+        return dict(hashed_url=hashed_url)
 
     app.jinja_env.globals['ANALYTICS_ID'] = config[config_name].ANALYTICS_ID
 
