@@ -112,6 +112,6 @@ def logout():
 def dashboard():
     return render_template('dashboard/index.html')
 
-@main.route('/dashboard/<path:filename>')
-def redirect_dashboard_assets(filename):
-    return redirect(url_for('main.asset', filename=filename))
+# @main.route('/dashboard/<path:filename>')
+# def redirect_dashboard_assets(filename):
+#     return redirect(url_for('main.asset', filename=filename))

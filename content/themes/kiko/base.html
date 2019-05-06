@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}{% endblock %}</title>
     <link rel="alternate" type="application/rss+xml" title="up1and" href="{{ url_for('main.rss') }}">
-    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,600">
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon"/>
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,600">
+    <link rel="stylesheet" href="{{ hashed_url('themes/main.css') }}">
     {% block link %}{% endblock %}
     <script src="{{ hashed_url('themes/main.js') }}"></script>
     <script>

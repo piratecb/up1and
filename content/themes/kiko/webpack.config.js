@@ -1,6 +1,7 @@
 const path = require('path')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
-const ManifestPlugin = require('webpack-manifest-plugin')
+const WebpackAssetsManifest = require('webpack-assets-manifest')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 const buildPath = path.resolve(__dirname, 'build')
 
@@ -15,7 +16,10 @@ const config = {
   },
   plugins: [
     new CleanWebpackPlugin(),
-    new ManifestPlugin(),
+    new WebpackAssetsManifest(),
+    new MiniCssExtractPlugin({
+      filename: '[name].[chunkhash].css'
+    })
   ],
   resolve: {
     extensions: ['.js', '.jsx', '.css']
@@ -28,7 +32,7 @@ const config = {
       },
       {
         test: /\.css$/,
-        use: ['style-loader', 'css-loader']
+        use: [MiniCssExtractPlugin.loader, 'css-loader']
       },
       {
         test: /\.(png|svg|jpg|gif)$/,
