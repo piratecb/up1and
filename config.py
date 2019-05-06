@@ -11,7 +11,6 @@ class Config:
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     CONTENT_DIR = contentdir
-    ASSETS_DIR = os.path.join(basedir, 'build')
     THEMES_DIR = os.path.join(contentdir, 'themes')
 
     @classmethod

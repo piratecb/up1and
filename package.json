@@ -17,7 +17,8 @@
   },
   "scripts": {
     "dev": "webpack -d --watch",
-    "build": "webpack -p"
+    "build": "webpack -p",
+    "build_theme": "webpack -p --config webpack.theme.config.js"
   },
   "devDependencies": {
     "@babel/core": "^7.4.4",

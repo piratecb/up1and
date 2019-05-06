@@ -49,16 +49,20 @@ def create_app(config_name):
             import json
             path, filename = filepath.rsplit('/')
             if path == 'themes':
-                directory = os.path.join(app.config['THEMES_DIR'], 'kiko', 'build')
+                active_theme = 'kiko'
+                directory = os.path.join(app.static_folder, 'themes', active_theme)
+                relative_path = 'themes/' + active_theme
             else:
-                directory = app.config['ASSETS_DIR']
+                directory = os.path.join(app.static_folder, 'assets')
+                relative_path = 'assets'
+
             manifest = os.path.join(directory, 'manifest.json')
             with open(manifest) as f:  
                 data = json.load(f)
                 hashname = data.get(filename, None)
                 if hashname:
-                    return os.path.join('/', path, hashname).replace('\\', '/')
-                return filepath
+                    return os.path.join('/static', relative_path, hashname)
+                return os.path.join('/static', relative_path, filename)
         return dict(hashed_url=hashed_url)
 
     app.jinja_env.globals['ANALYTICS_ID'] = config[config_name].ANALYTICS_ID

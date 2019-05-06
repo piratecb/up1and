@@ -40,3 +40,5 @@ nosetests.xml
 package-lock.json
 node_modules/
 .vscode/
+server/static/assets/
+server/static/themes/

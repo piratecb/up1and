@@ -65,16 +65,6 @@ def tags(slug):
     posts = tag.posts.order_by(Post.created.desc()).all()
     return render_template(active_theme + 'tags.html', posts=posts, tag=tag)
 
-@main.route('/themes/<path:filename>')
-def theme(filename):
-    directory = os.path.join(current_app.config['THEMES_DIR'], active_theme, 'build')
-    return send_from_directory(directory, filename)
-
-@main.route('/assets/<path:filename>')
-def asset(filename):
-    directory = current_app.config['ASSETS_DIR']
-    return send_from_directory(directory, filename)
-
 @main.route('/account/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
@@ -111,7 +101,3 @@ def logout():
 @login_required
 def dashboard():
     return render_template('dashboard/index.html')
-
-# @main.route('/dashboard/<path:filename>')
-# def redirect_dashboard_assets(filename):
-#     return redirect(url_for('main.asset', filename=filename))
